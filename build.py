@@ -123,7 +123,9 @@ def main():
     # side mirrors up to the top corners of the screen pillars, as on his car (the centre mirror is already on the top rail)
     for m in ['mirror_side', 'mirror_side_glass', 'mirror_side_handle_SUB0', 'mirror_side_handle_SUB1',
               'mirror_sideL', 'mirror_side_glassL', 'mirror_side_handleL_SUB0', 'mirror_side_handleL_SUB1']:
-        k.translate_mesh(m, 0.0, 0.21, -0.03)    # harness tags on and behind the seat backs go; only the two on the shoulder straps in front stay
+        k.translate_mesh(m, 0.0, 0.21, -0.03)
+    for m in ['mirror', 'mirror002', 'MIRROR_C']:            # centre mirror sits on the dash top on his car
+        k.translate_mesh(m, 0.0, -0.22, 0.03)    # harness tags on and behind the seat backs go; only the two on the shoulder straps in front stay
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')

@@ -1,7 +1,7 @@
 """Wooden luggage rack on the rear deck: two ash slats on a chrome rail with a raised hoop at the back.
 Car space, from the model's deck measurements; UV rows: 0 wood, 1 chrome (texture gio_rack.dds)."""
 import numpy as np
-from exhaust_geom import _tube
+
 
 def _box(c, size, row):
     V, I = [], []
@@ -18,6 +18,7 @@ def _box(c, size, row):
     return np.array(V, np.float32), np.array(I, np.int64)
 
 def build(deck_y=0.72, z_centre=-1.12, half_width=0.27):
+    from exhaust_geom import _tube
     parts = []
     y_rail = deck_y + 0.025
     for z in (z_centre + 0.06, z_centre - 0.06):
