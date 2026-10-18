@@ -3,49 +3,49 @@
   "brand": "Birkin",
   "class": "street",
   "country": "South Africa",
-  "description": "A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 82 bhp at 5,750 rpm and 112 Nm at 4,250 rpm at the crank (trimmed 28 percent from the first version, which drove too strong), 6,800 rpm limiter, Ford Type E gear ratios 3.65 / 1.60 / 1.30 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
+  "description": "A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 78 bhp at 5,400 rpm and 114 Nm at 4,250 rpm at the crank, a peaky cammed Kent that labors below 3,500 rpm and falls away fast past 5,500, 6,800 rpm limiter, Ford Type E gear ratios 3.65 / 1.60 / 1.30 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
   "email": "benobro@gmail.com",
   "name": "Birkin S3 1700 Kent (Giovann)",
   "powerCurve": [
     [
       1000.0,
-      10.5
+      8.4
     ],
     [
       1250.0,
-      14.4
+      11.6
     ],
     [
       1500.0,
-      18.7
+      15.0
     ],
     [
       1750.0,
-      23.1
+      18.7
     ],
     [
       2000.0,
-      27.5
+      22.7
     ],
     [
       2250.0,
-      31.9
+      27.2
     ],
     [
       2500.0,
-      36.2
+      32.3
     ],
     [
       2750.0,
-      40.2
+      37.8
     ],
     [
       3000.0,
-      44.7
+      43.4
     ],
     [
       3250.0,
-      48.8
+      48.4
     ],
     [
       3500.0,
@@ -53,19 +53,19 @@
     ],
     [
       3750.0,
-      57.9
+      58.5
     ],
     [
       4000.0,
-      62.9
+      63.5
     ],
     [
       4250.0,
-      66.8
+      68.0
     ],
     [
       4500.0,
-      70.8
+      72.0
     ],
     [
       4750.0,
@@ -73,48 +73,48 @@
     ],
     [
       5000.0,
-      77.2
+      76.5
     ],
     [
       5250.0,
-      79.6
+      78.2
     ],
     [
       5500.0,
-      81.1
+      78.0
     ],
     [
       5750.0,
-      82.4
-    ],
-    [
-      6000.0,
-      80.9
-    ],
-    [
-      6250.0,
-      79.9
-    ],
-    [
-      6500.0,
       76.7
     ],
     [
+      6000.0,
+      73.3
+    ],
+    [
+      6250.0,
+      68.5
+    ],
+    [
+      6500.0,
+      61.2
+    ],
+    [
       6750.0,
-      71.1
+      53.1
     ],
     [
       7000.0,
-      63.9
+      45.2
     ]
   ],
   "specs": {
-    "bhp": "82bhp/5750rpm",
-    "torque": "112Nm/4250rpm",
+    "bhp": "78bhp/5400rpm",
+    "torque": "114Nm/4250rpm",
     "weight": "650 kg",
-    "topspeed": "155km/h",
-    "acceleration": "9.9s 0-100km/h",
-    "pwratio": "7.9 kg/hp"
+    "topspeed": "152km/h",
+    "acceleration": "10.4s 0-100km/h",
+    "pwratio": "8.3 kg/hp"
   },
   "tags": [
     "rwd",
@@ -131,43 +131,43 @@
   "torqueCurve": [
     [
       1000.0,
-      75.0
+      60.0
     ],
     [
       1250.0,
-      82.0
+      66.0
     ],
     [
       1500.0,
-      89.0
+      71.0
     ],
     [
       1750.0,
-      94.0
+      76.0
     ],
     [
       2000.0,
-      98.0
+      81.0
     ],
     [
       2250.0,
-      101.0
+      86.0
     ],
     [
       2500.0,
-      103.0
+      92.0
     ],
     [
       2750.0,
-      104.0
+      98.0
     ],
     [
       3000.0,
-      106.0
+      103.0
     ],
     [
       3250.0,
-      107.0
+      106.0
     ],
     [
       3500.0,
@@ -175,19 +175,19 @@
     ],
     [
       3750.0,
-      110.0
+      111.0
     ],
     [
       4000.0,
-      112.0
+      113.0
     ],
     [
       4250.0,
-      112.0
+      114.0
     ],
     [
       4500.0,
-      112.0
+      114.0
     ],
     [
       4750.0,
@@ -195,39 +195,39 @@
     ],
     [
       5000.0,
-      110.0
+      109.0
     ],
     [
       5250.0,
-      108.0
+      106.0
     ],
     [
       5500.0,
-      105.0
+      101.0
     ],
     [
       5750.0,
-      102.0
+      95.0
     ],
     [
       6000.0,
-      96.0
+      87.0
     ],
     [
       6250.0,
-      91.0
+      78.0
     ],
     [
       6500.0,
-      84.0
+      67.0
     ],
     [
       6750.0,
-      75.0
+      56.0
     ],
     [
       7000.0,
-      65.0
+      46.0
     ]
   ],
   "url": "https://www.racedepartment.com/downloads/caterham-7-super-sprint-1995.16143/",

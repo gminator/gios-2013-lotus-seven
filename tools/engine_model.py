@@ -1,15 +1,15 @@
-"""v4, 18 Oct 2026 (night): v2 trimmed by 28 percent, see POWER_TRIM. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
+"""v5, 18 Oct 2026 (night): a peakier curve, see crank below. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
 Generate power.lut (wheel torque, 13% loss like the original) + ui curves for the Birkin Kent 1700,
 and sanity-check acceleration against the stock Caterham, calibrated on the sim telemetry."""
 import json, math, sys
 car=sys.argv[1]
 # crank torque curve (Nm) for a low-compression 1700 Kent crossflow on twin 40 DCOEs, ~105 bhp @ 5500
 crank={1000:104,1250:114,1500:123,1750:130,2000:136,2250:140,2500:143,2750:145,3000:147,3250:149,3500:151,3750:153,4000:155,4250:156,4500:156,4750:155,5000:153,5250:150,5500:146,5750:141,6000:134,6250:126,6500:116,6750:104,7000:90}
-# v3 (0.80) still felt too strong. Measured against the Garmin trace from Killarney: v3 matched the real 100 to 130 km/h pull
-# (6.4 to 7.0 s sim, 6.0 to 6.9 s real) but real 80 to 130 km/h pulls typically take 10 to 11 s and the model gave 9.2 s.
-# 0.72 puts the model at about 10.8 s, the real median, and cuts the back-straight speed a little further.
-POWER_TRIM = 0.72
-crank = {r: round(t * POWER_TRIM) for r, t in crank.items()}
+# v5: his notes after driving v4: the real car labors in 3rd (weak below about 3,500 rpm), picks up speed out of corners
+# slower, runs out of breath early (he holds 3rd to the end of the start straight in the sim, the real car wants 4th long
+# before the line) and scrubs speed fast. Drag already matches a Seven (about 0.87 m2 CdA, 0.22 g on a lift at speed), so only the
+# engine changes: a cammed Kent that is peaky, about 78 bhp at 5,400 rpm, 114 Nm at 4,250, falling away fast past 5,500.
+crank = {1000:60,1250:66,1500:71,1750:76,2000:81,2250:86,2500:92,2750:98,3000:103,3250:106,3500:109,3750:111,4000:113,4250:114,4500:114,4750:112,5000:109,5250:106,5500:101,5750:95,6000:87,6250:78,6500:67,6750:56,7000:46}
 LOSS=0.87
 lut=[(0,0),(250,0),(500,0),(750,0)]+[(r,round(t*LOSS,1)) for r,t in sorted(crank.items())]+[(r,0) for r in range(7250,10001,250)]
 open(f'{car}/data/power.lut','w').write('\n'.join(f'{r}|{t}' for r,t in lut)+'\n')
@@ -20,15 +20,15 @@ ui=json.load(open(f'{car}/ui/ui_car.json'))
 ui.update({
  "name":"Birkin S3 1700 Kent (Giovann)","brand":"Birkin","class":"street","country":"South Africa","year":2013,"version":"1.52-giovann",
  "author":"Ben O'Bro & JackCY (mod); Birkin re-tune for Giovann Adonis",
- "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 82 bhp at 5,750 rpm and 112 Nm at 4,250 rpm at the crank (trimmed 28 percent from the first version, which drove too strong), 6,800 rpm limiter, Ford Type E gear ratios 3.65 / 1.60 / 1.30 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
- "specs":{"bhp":"82bhp/5750rpm","torque":"112Nm/4250rpm","weight":"650 kg","topspeed":"155km/h","acceleration":"9.9s 0-100km/h","pwratio":"7.9 kg/hp"},
+ "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 78 bhp at 5,400 rpm and 114 Nm at 4,250 rpm at the crank, a peaky cammed Kent that labors below 3,500 rpm and falls away fast past 5,500, 6,800 rpm limiter, Ford Type E gear ratios 3.65 / 1.60 / 1.30 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
+ "specs":{"bhp":"78bhp/5400rpm","torque":"114Nm/4250rpm","weight":"650 kg","topspeed":"152km/h","acceleration":"10.4s 0-100km/h","pwratio":"8.3 kg/hp"},
  "tags":["rwd","street","lightweight","trackday","manual","South Africa","birkin","kent","rhd","4speed"],
  "powerCurve":[[float(r),round(hp(r,t),1)] for r,t in sorted(crank.items())],
  "torqueCurve":[[float(r),float(t)] for r,t in sorted(crank.items())]})
 json.dump(ui,open(f'{car}/ui/ui_car.json','w'),indent=2,ensure_ascii=False)
 import os
 if os.path.isdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno')):
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno','estimate-2026-10-18-v4.csv'),'w') as f:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno','estimate-2026-10-18-v5.csv'),'w') as f:
         f.write('rpm,torque_nm_crank,power_bhp_crank\n')
         for r,t in sorted(crank.items()): f.write(f'{r},{t},{hp(r,t):.1f}\n')
 # ---- longitudinal sanity model, calibrated so the STOCK car reproduces the sim telemetry (1.44 m/s2 @110 in 4th, 2.33 @100 in 3rd)
@@ -63,7 +63,7 @@ def t80_130(curve,mass,ratios,shift_rpm):
 fd=3.916667
 print(f"stock Caterham 80-130: 3rd only {t80_130(stock,675,[1.258065*fd],9000):.1f}s, 4th only {t80_130(stock,675,[fd],9000):.1f}s")
 rat=[3.65*fd,1.97*fd,1.37*fd,fd]
-print(f"Birkin model 80-130: shifting at 6200 {t80_130(new,710,rat,6500):.1f}s, 4th only {t80_130(new,710,[fd],9000):.1f}s   (real Garmin best 9.0s, typical 10-12s)")
+print(f"Birkin model 80-130: best shift {min((round(t80_130(new,710,rat,sh),1),sh) for sh in (5200,5500,5800,6200,6500))} (s, rpm)  shifting at 6200 {t80_130(new,710,rat,6500):.1f}s, 4th only {t80_130(new,710,[fd],9000):.1f}s   (real Garmin best 9.0s, typical 10-12s)")
 # top speed in 4th
 v=30
 while accel(new,710,fd,v,k)>0 and v<80: v+=0.1
