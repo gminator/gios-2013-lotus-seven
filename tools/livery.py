@@ -75,9 +75,7 @@ def paint(mask_png, out_dds, check_png=None, base_map_png=None):
     place(out, vent, 723, 670, TILT); place(out, flags, 478, 735, TILT); place(out, name, 415, 770, TILT)
     # top strip = left side, laid out rotated 180 degrees: exhaust hole where the elbow pierces the panel
     place(out, vent, 723, 1024 - 670, 180 - TILT); place(out, flags, 478, 1024 - 735, 180 - TILT); place(out, name, 415, 1024 - 770, 180 - TILT)
-    d = ImageDraw.Draw(out); hx, hy, hr = 739 * sc, (1024 - 716) * sc, 15 * sc
-    d.ellipse([hx - hr - 4, hy - hr - 4, hx + hr + 4, hy + hr + 4], fill=(90, 92, 94))      # rolled edge of the cut-out
-    d.ellipse([hx - hr, hy - hr, hx + hr, hy + hr], fill=(8, 8, 8))                        # the hole
+
     out.convert('RGBA').save(out_dds, pixel_format='DXT5')
     if check_png and base_map_png:
         base = Image.open(base_map_png).convert('RGB').resize((S, S))

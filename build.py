@@ -80,8 +80,13 @@ def main():
     # the rear deck: a flat body-colour panel instead of the canvas tonneau, press studs hidden
     import rack_geom as _rg
     bc = [m for m in _X if m['name'] == 'boot_cover'][0]
-    DV, DI = _rg._box((0.0, 0.70, -1.14), (0.94, 0.012, 0.50), 1)
-    k.replace_mesh('boot_cover', exhaust_geom.to_local(DV.astype(np.float32), bc['world']), DI.astype(np.uint16), material='gio_brg_paint')
+    import struct as _st
+    BV = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
+    BI = np.frombuffer(_b, dtype='<u2', count=bc['ni'], offset=bc['ioff']).copy()
+    Pw = np.c_[BV[:, :3], np.ones(len(BV))] @ bc['world']
+    Pw[:, 1] = 0.645 + 0.25 * (Pw[:, 1] - 0.645)             # take the dome out of the tonneau: a near-flat deck on the tub's own outline
+    BV[:, :3] = (Pw[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
+    k.replace_mesh('boot_cover', BV, BI, material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
     k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
     for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')

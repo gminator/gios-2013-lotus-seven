@@ -36,11 +36,11 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
                 I += ([c, b, a] if ring == 0 else [c, a, b])
     return np.array(V, np.float32), np.array(I, np.int64)
 
-def build(X=0.47, Y=0.17, z_front=0.80, z_rear=-0.45, y_hole=0.26):
+def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81):
     """X: outer face of the side panel on the exhaust side; Y: silencer centre height; y_hole: where the elbow leaves the panel."""
     parts = []
     xo = X + 0.115
-    parts.append(_tube([(X - 0.03, y_hole, 0.985), (X + 0.03, y_hole, 0.985), (X + 0.085, y_hole - 0.02, 0.975), (X + 0.11, y_hole - 0.055, 0.94), (xo, Y + 0.01, 0.88), (xo, Y, z_front)], 0.034, 1))
+    parts.append(_tube([(X - 0.03, y_hole, z_hole), (X + 0.03, y_hole, z_hole), (X + 0.085, y_hole - 0.015, z_hole - 0.01), (X + 0.11, y_hole - 0.045, z_hole - 0.05), (xo, Y + 0.01, z_hole - 0.11), (xo, Y, z_front)], 0.034, 1))
     parts.append(_tube([(xo, Y, z_front), (xo, Y, z_rear)], 0.062, 0, caps=True))
     parts.append(_tube([(xo, Y, z_front - 0.02), (xo, Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
     for z in (z_front - 0.02, z_front - 0.56, z_front - 0.96, z_rear + 0.02):

@@ -21,7 +21,7 @@ def build(deck_y=0.72, z_centre=-1.12, half_width=0.27):
     parts = []
     y_rail = deck_y + 0.025
     for z in (z_centre + 0.06, z_centre - 0.06):
-        parts.append(_box((0, y_rail + 0.012, z), (half_width * 2, 0.02, 0.09), 0))
+        parts.append(_box((0, y_rail + 0.017, z), (half_width * 2, 0.022, 0.09), 0))
     r = 0.006
     loop = [(-half_width, y_rail, z_centre + 0.13), (half_width, y_rail, z_centre + 0.13), (half_width, y_rail, z_centre - 0.13), (-half_width, y_rail, z_centre - 0.13), (-half_width, y_rail, z_centre + 0.13)]
     parts.append(_tube(loop, r, 1, segs=10, u_scale=8))
