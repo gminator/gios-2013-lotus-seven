@@ -45,7 +45,7 @@ def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81):
     parts.append(_tube([(xo, Y, z_front - 0.02), (xo, Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
     for z in (z_front - 0.02, z_front - 0.56, z_front - 0.96, z_rear + 0.02):
         parts.append(_tube([(xo, Y, z + 0.012), (xo, Y, z - 0.012)], 0.086, 3, segs=24))
-    parts.append(_tube([(xo, Y, z_rear), (xo, Y, z_rear - 0.07), (xo + 0.005, Y - 0.01, z_rear - 0.11), (xo + 0.01, Y - 0.035, z_rear - 0.135), (xo + 0.015, Y - 0.065, z_rear - 0.145), (xo + 0.015, Y - 0.10, z_rear - 0.145)], 0.03, 0))
+    parts.append(_tube([(xo, Y, z_rear), (xo, Y, z_rear - 0.06), (xo + 0.02, Y - 0.004, z_rear - 0.10), (xo + 0.07, Y - 0.015, z_rear - 0.135), (xo + 0.13, Y - 0.03, z_rear - 0.15), (xo + 0.19, Y - 0.04, z_rear - 0.155)], 0.03, 0))   # tailpipe sweeps outward, slight drop
     V = np.concatenate([p[0] for p in parts]); I = []; off = 0
     for v, i in parts: I += list(i + off); off += len(v)
     I = np.array(I, np.uint16)
