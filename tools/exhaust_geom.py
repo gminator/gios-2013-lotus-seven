@@ -36,6 +36,27 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
                 I += ([c, a, b] if ring == 0 else [c, b, a])
     return np.array(V, np.float32), np.array(I, np.int64)
 
+
+def _annulus(c, r_in, r_out, row, segs=40, nx=1.0, depth=0.004):
+    """flat ring facing +x (nx=+1) or -x, with a short outer lip of `depth`; UV row of the exhaust texture"""
+    cx, cy, cz = c; V, I = [], []
+    for k in range(segs + 1):
+        a = 2 * math.pi * k / segs; ca, sa = math.cos(a), math.sin(a)
+        for r in (r_in, r_out):
+            V.append([cx, cy + r * ca, cz + r * sa, nx, 0, 0, k / segs, (row + 0.5) / 4 - 1.0, 0, 0, 1])
+    for k in range(segs):
+        a, b, c2, d = 2 * k, 2 * k + 1, 2 * k + 3, 2 * k + 2
+        I += ([a, b, c2, a, c2, d] if nx > 0 else [a, c2, b, a, d, c2])
+    base = len(V)
+    for k in range(segs + 1):                       # lip: outer edge back to the panel
+        a = 2 * math.pi * k / segs; ca, sa = math.cos(a), math.sin(a)
+        V.append([cx, cy + r_out * ca, cz + r_out * sa, 0, ca, sa, k / segs, (row + 0.5) / 4 - 1.0, 0, 0, 1])
+        V.append([cx - nx * depth, cy + r_out * ca, cz + r_out * sa, 0, ca, sa, k / segs, (row + 0.5) / 4 - 1.0, 0, 0, 1])
+    for k in range(segs):
+        a, b, c2, d = base + 2 * k, base + 2 * k + 1, base + 2 * k + 3, base + 2 * k + 2
+        I += ([a, c2, b, a, d, c2] if nx > 0 else [a, b, c2, a, c2, d])
+    return np.array(V, np.float32), np.array(I, np.int64)
+
 def build(Y=0.135, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_hole=0.23, z_hole=0.80, x_panel=0.37):
     # y_hole/z_hole/x_panel: the mod's own 14 x 13 cm cut-out in the left lower panel (the Caterham manifold hole); the elbow goes through it
     """Silencer axis follows the tapering body side (x_front at z_front, x_rear at z_rear). The elbow leaves the flat side
@@ -48,7 +69,10 @@ def build(Y=0.135, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_
     parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.07, y_hole - 0.01, z_hole - 0.005),
                         (xe - 0.01, y_hole - 0.05, z_hole - 0.04), (xe, Y + 0.05, z_hole - 0.09), (xe, Y, z_hole - 0.125), (xe, Y, z_hole - 0.17)], 0.034, 1))   # last leg runs 4 cm into the silencer so the join is buried
     # rubber grommet flush with the panel
-    parts.append(_tube([(x_panel + 0.004, y_hole, z_hole), (x_panel + 0.020, y_hole, z_hole)], 0.097, 3, segs=36, caps=True))   # 8 mm proud of the panel so it does not z-fight   # round grommet wide enough to cover the rectangular cut-out's corners
+    # rubber edge trim round the cut-out: a slim black ring just proud of the panel, and a dark back plate 4 cm inside so the opening has depth
+    parts.append(_annulus((x_panel + 0.006, y_hole, z_hole), 0.080, 0.097, 3, nx=1.0, depth=0.008))
+    from rack_geom import _box
+    parts.append(_box((x_panel - 0.04, y_hole, z_hole), (0.004, 0.19, 0.19), 3))   # round grommet wide enough to cover the rectangular cut-out's corners
     # silencer, guard and bands along the angled axis
     parts.append(_tube([(axis(z_front), Y, z_front), (axis(z_rear), Y, z_rear)], 0.062, 0, caps=True))
     parts.append(_tube([(axis(z_front - 0.02), Y, z_front - 0.02), (axis(z_rear + 0.02), Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
