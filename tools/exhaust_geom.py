@@ -41,6 +41,8 @@ def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81):
     parts = []
     xo = X + 0.115
     parts.append(_tube([(X - 0.03, y_hole, z_hole), (X + 0.03, y_hole, z_hole), (X + 0.085, y_hole - 0.015, z_hole - 0.01), (X + 0.11, y_hole - 0.045, z_hole - 0.05), (xo, Y + 0.01, z_hole - 0.11), (xo, Y, z_front)], 0.034, 1))
+    # rubber grommet where the elbow comes through the side panel: a short black ring flush with the panel, plus a capped plug behind it
+    parts.append(_tube([(X - 0.002, y_hole, z_hole), (X + 0.016, y_hole, z_hole)], 0.054, 3, segs=24, caps=True))
     parts.append(_tube([(xo, Y, z_front), (xo, Y, z_rear)], 0.062, 0, caps=True))
     parts.append(_tube([(xo, Y, z_front - 0.02), (xo, Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
     for z in (z_front - 0.02, z_front - 0.56, z_front - 0.96, z_rear + 0.02):
