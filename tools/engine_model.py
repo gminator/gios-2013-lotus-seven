@@ -1,4 +1,4 @@
-"""v9, 18 Oct 2026 (night): a cammed Kent that only comes on at 5,000 rpm (see crank). v8: 4th shortened to 1.10 (see g4). v7: the v6 curve scaled by another 0.92 and a shorter 3rd (1.40), see crank below. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
+"""v10, 18 Oct 2026 (night): v9 was too sluggish at the top (3 laps, none reached 140 km/h, against 10 of 16 real laps), so v10 keeps the weak low end and the cam coming on at 5,000 rpm but restores v7's power from 5,000 rpm up (about 60 bhp at 5,000, 66 at 5,500, 68 peak near 6,000). v9: a cammed Kent that only comes on at 5,000 rpm (see crank). v8: 4th shortened to 1.10 (see g4). v7: the v6 curve scaled by another 0.92 and a shorter 3rd (1.40), see crank below. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
 Generate power.lut (wheel torque, 13% loss like the original) + ui curves for the Birkin Kent 1700,
 and sanity-check acceleration against the stock Caterham, calibrated on the sim telemetry."""
 import json, math, sys
@@ -16,7 +16,7 @@ crank={1000:104,1250:114,1500:123,1750:130,2000:136,2250:140,2500:143,2750:145,3
 # slower, runs out of breath early (he holds 3rd to the end of the start straight in the sim, the real car wants 4th long
 # before the line) and scrubs speed fast. Drag already matches a Seven (about 0.87 m2 CdA, 0.22 g on a lift at speed), so only the
 # engine changes: a cammed Kent that is peaky, about 64 bhp at 5,500 rpm, 95 Nm at 4,250, falling away fast past 5,500.
-crank = {1000:52,1250:55,1500:58,1750:60,2000:62,2250:63,2500:64,2750:64,3000:64,3250:63,3500:63,3750:62,4000:62,4250:63,4500:66,4750:68.5,5000:71,5250:74,5500:77,5750:77.5,6000:77.5,6250:74.5,6500:68,6750:60,7000:51}
+crank = {1000:52,1250:55,1500:58,1750:60,2000:61,2250:62,2500:62,2750:62,3000:62,3250:61,3500:61,3750:60,4000:61,4250:64,4500:74,4750:80,5000:85,5250:86,5500:85,5750:83,6000:81,6250:77.5,6500:71,6750:62,7000:51.5}
 LOSS=0.87
 lut=[(0,0),(250,0),(500,0),(750,0)]+[(r,round(t*LOSS,1)) for r,t in sorted(crank.items())]+[(r,0) for r in range(7250,10001,250)]
 open(f'{car}/data/power.lut','w').write('\n'.join(f'{r}|{t}' for r,t in lut)+'\n')
@@ -27,15 +27,15 @@ ui=json.load(open(f'{car}/ui/ui_car.json'))
 ui.update({
  "name":"Birkin S3 1700 Kent (Giovann)","brand":"Birkin","class":"street","country":"South Africa","year":2013,"version":"1.52-giovann",
  "author":"Ben O'Bro & JackCY (mod); Birkin re-tune for Giovann Adonis",
- "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 65 bhp (48 kW) at 6,250 rpm and 78 Nm at 5,750 rpm at the crank, a cammed Kent that is weak below about 4,500 rpm and comes on at 5,000 rpm, 6,800 rpm limiter, gear ratios 3.65 / 1.60 / 1.40 / 1.10 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
- "specs":{"bhp":"65bhp/6250rpm","torque":"78Nm/5750rpm","weight":"650 kg","topspeed":"140km/h","acceleration":"18.6s 0-100km/h","pwratio":"10.0 kg/hp"},
+ "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 68 bhp (51 kW) at 6,000 rpm and 86 Nm at 5,250 rpm at the crank, a cammed Kent that is weak below about 4,500 rpm and comes on at 5,000 rpm, 6,800 rpm limiter, gear ratios 3.65 / 1.60 / 1.40 / 1.10 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
+ "specs":{"bhp":"68bhp/6000rpm","torque":"86Nm/5250rpm","weight":"650 kg","topspeed":"144km/h","acceleration":"17.6s 0-100km/h","pwratio":"9.6 kg/hp"},
  "tags":["rwd","street","lightweight","trackday","manual","South Africa","birkin","kent","rhd","4speed"],
  "powerCurve":[[float(r),round(hp(r,t),1)] for r,t in sorted(crank.items())],
  "torqueCurve":[[float(r),float(t)] for r,t in sorted(crank.items())]})
 json.dump(ui,open(f'{car}/ui/ui_car.json','w'),indent=2,ensure_ascii=False)
 import os
 if os.path.isdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno')):
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno','estimate-2026-10-18-v9.csv'),'w') as f:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno','estimate-2026-10-18-v10.csv'),'w') as f:
         f.write('rpm,torque_nm_crank,power_bhp_crank\n')
         for r,t in sorted(crank.items()): f.write(f'{r},{t},{hp(r,t):.1f}\n')
 # ---- longitudinal sanity model, calibrated so the STOCK car reproduces the sim telemetry (1.44 m/s2 @110 in 4th, 2.33 @100 in 3rd)
