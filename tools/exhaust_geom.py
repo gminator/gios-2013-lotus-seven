@@ -45,7 +45,7 @@ def build(Y=0.155, z_front=0.62, z_rear=-0.45, x_front=0.475, x_rear=0.565, y_ho
     xe = axis(z_front) + 0.0
     # elbow: from inside the bay, through the panel, out and down into the silencer front
     parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.07, y_hole - 0.01, z_hole - 0.005),
-                        (xe - 0.01, y_hole - 0.05, z_hole - 0.03), (xe, Y + 0.05, z_hole - 0.07), (xe, Y, z_hole - 0.10)], 0.034, 1))
+                        (xe - 0.01, y_hole - 0.05, z_hole - 0.03), (xe, Y + 0.05, z_hole - 0.07), (xe, Y, z_hole - 0.10), (xe, Y, z_hole - 0.14)], 0.034, 1))   # last leg runs 4 cm into the silencer so the join is buried
     # rubber grommet flush with the panel
     parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.014, y_hole, z_hole)], 0.054, 3, segs=24, caps=True))
     # silencer, guard and bands along the angled axis
