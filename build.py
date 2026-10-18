@@ -93,8 +93,11 @@ def main():
     # drop triangles that collapsed to zero area (the old rolled edge) so nothing z-fights
     P3 = Pw[:, :3][tri]; area = np.linalg.norm(np.cross(P3[:, 1] - P3[:, 0], P3[:, 2] - P3[:, 0]), axis=1)
     BI = tri[area > 1e-6].reshape(-1).astype(np.uint16)
-    # a flat green floor just under the deck so the roll-bar cut-outs show paint, not the dark boot
-    FV, FI = _rg._box((0.0, 0.60, -1.14), (0.88, 0.008, 0.42), 1)   # well below the deck, only seen through the roll-bar cut-outs
+    # a second green plane 4 mm under the deck, same slope, inside the opening: fills the roll-bar cut-outs seamlessly
+    def _deck_y(z): return 0.655 + (z + 1.39) * (0.062 / 0.50) - 0.004
+    _q = [(-0.46, -1.38), (0.46, -1.38), (0.46, -0.90), (-0.46, -0.90)]
+    FV = np.array([[x, _deck_y(z), z, _n[0], _n[1], _n[2], 0.5, -0.5, 1, 0, 0] for x, z in _q], dtype=np.float32)
+    FI = np.array([0, 2, 1, 0, 3, 2], dtype=np.int64)
     FVl = exhaust_geom.to_local(FV.astype(np.float32), bc['world'])
     k.replace_mesh('boot_cover', np.vstack([BV, FVl]), np.concatenate([BI, (FI + len(BV)).astype(np.uint16)]), material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
