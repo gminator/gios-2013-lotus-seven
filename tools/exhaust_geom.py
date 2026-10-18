@@ -27,13 +27,13 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
     for i in range(len(pts) - 1):
         for k in range(segs):
             a, b, c, d = i * w + k, i * w + k + 1, (i + 1) * w + k + 1, (i + 1) * w + k
-            I += [a, c, b, a, d, c]      # counter-clockwise seen from outside (right-hand rule gives the outward normal)
+            I += [a, b, c, a, c, d]      # counter-clockwise about the outward normal, as the mod's meshes are wound (the game culls back faces)
     if caps:
         for ring, tn in ((0, -tans[0]), (len(pts) - 1, tans[-1])):
             c = len(V); V.append([*pts[ring], *tn, 0.5, 3.5 / 4 - 1.0, 0, 0, 0])
             for k in range(segs):
                 a, b = ring * w + k, ring * w + k + 1
-                I += ([c, b, a] if ring == 0 else [c, a, b])
+                I += ([c, a, b] if ring == 0 else [c, b, a])
     return np.array(V, np.float32), np.array(I, np.int64)
 
 def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81):

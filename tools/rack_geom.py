@@ -14,7 +14,7 @@ def _box(c, size, row):
         for sa, sb, u, v in ((-1, -1, 0, 0), (1, -1, 1, 0), (1, 1, 1, 1), (-1, 1, 0, 1)):
             p = np.array(c) + n * half + a * half * sa + b * half * sb
             V.append([*p, *n, u * 0.9 + 0.05, (row + 0.1 + v * 0.8) / 4 - 1.0, *a])
-        I += [base, base + 2, base + 1, base, base + 3, base + 2]
+        I += [base, base + 1, base + 2, base, base + 2, base + 3]
     return np.array(V, np.float32), np.array(I, np.int64)
 
 def build(deck_y=0.72, z_centre=-1.12, half_width=0.27):
