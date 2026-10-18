@@ -36,21 +36,26 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
                 I += ([c, a, b] if ring == 0 else [c, b, a])
     return np.array(V, np.float32), np.array(I, np.int64)
 
-def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81, x_panel=0.37):
-    """X: outer face of the side panel at sill height (sets the silencer offset); x_panel: the panel surface where the elbow
-    comes through (the lower panel tapers in towards the nose); Y: silencer centre height; y_hole/z_hole: the elbow exit."""
+def build(Y=0.17, z_front=0.68, z_rear=-0.45, x_front=0.47, x_rear=0.565, y_hole=0.30, z_hole=0.78, x_panel=0.385):
+    """Silencer axis follows the tapering body side (x_front at z_front, x_rear at z_rear). The elbow leaves the flat side
+    panel at (x_panel, y_hole, z_hole), comes out into the open and curves down into the top of the silencer's front end."""
     parts = []
-    xo = X + 0.115
-    # elbow: starts well inside the engine bay, comes out through the grommet, curves back and down into the silencer
-    parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.03, y_hole, z_hole), (x_panel + 0.10, y_hole - 0.01, z_hole - 0.01),
-                        (xo - 0.04, y_hole - 0.04, z_hole - 0.06), (xo, Y + 0.01, z_hole - 0.12), (xo, Y, z_front)], 0.034, 1))
+    def axis(z):
+        t = (z - z_front) / (z_rear - z_front); return x_front + (x_rear - x_front) * t
+    xe = axis(z_front) + 0.0
+    # elbow: from inside the bay, through the panel, out and down into the silencer front
+    parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.07, y_hole - 0.01, z_hole - 0.005),
+                        (xe - 0.01, y_hole - 0.05, z_hole - 0.03), (xe, Y + 0.05, z_hole - 0.07), (xe, Y, z_hole - 0.10)], 0.034, 1))
     # rubber grommet flush with the panel
     parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.014, y_hole, z_hole)], 0.054, 3, segs=24, caps=True))
-    parts.append(_tube([(xo, Y, z_front), (xo, Y, z_rear)], 0.062, 0, caps=True))
-    parts.append(_tube([(xo, Y, z_front - 0.02), (xo, Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
+    # silencer, guard and bands along the angled axis
+    parts.append(_tube([(axis(z_front), Y, z_front), (axis(z_rear), Y, z_rear)], 0.062, 0, caps=True))
+    parts.append(_tube([(axis(z_front - 0.02), Y, z_front - 0.02), (axis(z_rear + 0.02), Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
     for z in (z_front - 0.02, z_front - 0.56, z_front - 0.96, z_rear + 0.02):
-        parts.append(_tube([(xo, Y, z + 0.012), (xo, Y, z - 0.012)], 0.086, 3, segs=24))
-    parts.append(_tube([(xo, Y, z_rear), (xo, Y, z_rear - 0.06), (xo + 0.02, Y - 0.004, z_rear - 0.10), (xo + 0.07, Y - 0.015, z_rear - 0.135), (xo + 0.13, Y - 0.03, z_rear - 0.15), (xo + 0.19, Y - 0.04, z_rear - 0.155)], 0.03, 0))   # tailpipe sweeps outward, slight drop
+        parts.append(_tube([(axis(z + 0.012), Y, z + 0.012), (axis(z - 0.012), Y, z - 0.012)], 0.086, 3, segs=24))
+    # tailpipe sweeps outward with a slight drop
+    xr = axis(z_rear)
+    parts.append(_tube([(xr, Y, z_rear), (xr, Y, z_rear - 0.06), (xr + 0.02, Y - 0.004, z_rear - 0.10), (xr + 0.07, Y - 0.015, z_rear - 0.135), (xr + 0.13, Y - 0.03, z_rear - 0.15), (xr + 0.19, Y - 0.04, z_rear - 0.155)], 0.03, 0))
     V = np.concatenate([p[0] for p in parts]); I = []; off = 0
     for v, i in parts: I += list(i + off); off += len(v)
     I = np.array(I, np.uint16)
