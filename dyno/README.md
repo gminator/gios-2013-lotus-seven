@@ -1,7 +1,9 @@
 # Dyno
 
-`estimate-2026-10-18` is the starting guess, not a measurement: a low compression 1700 Kent crossflow on twin
-side-draughts, about 105 bhp at 5,500 rpm and 155 Nm at 3,750 at the crank, 6,500 rpm limiter. It was sized so the
+`estimate-2026-10-18` was the first guess (105 bhp at 5,500, 155 Nm at 3,750, 6,500 limiter). `estimate-2026-10-18-v2`
+is the current one after Giovann confirmed the 711M block, gas-flowed head and performance cam: about 114 bhp at
+5,750 rpm and 156 Nm at 4,250 at the crank, 6,800 rpm limiter. `stock-caterham-1700ss-mod` is the mod's own curve.
+None of these is a measurement. It was sized so the
 sim does 80 to 130 km/h in 8 to 10 s like the Garmin trace from Killarney on 14 October 2026.
 
 ## When the car has been on a dyno

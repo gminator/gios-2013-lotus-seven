@@ -2,8 +2,8 @@
 
 ![The car on the gravel at the top of the pass](photos/hero-gravel.jpg)
 
-A 2013 Birkin S3 Lotus Seven replica, British Racing Green with a yellow nose: Ford Kent crossflow 1600 bored to
-1700, low compression pistons, twin side-draught carbs, wrapped manifolds, 4-speed, live axle, right hand drive,
+A 2013 Birkin S3 Lotus Seven replica, British Racing Green with a yellow nose: Ford Kent crossflow, 711M block bored from 1600 to
+1700, gas-flowed head, performance cam, low compression pistons, twin side-draught carbs, wrapped manifolds, 4-speed, live axle, right hand drive,
 registered CAA 692 564 in Cape Town. This repo is its twin for Assetto Corsa, built as a re-tune of Ben O'Bro and
 JackCY's **Caterham Super7 1700 Super Sprint RHD** mod (v1.52, physics 2.9) from RaceDepartment.
 
@@ -28,7 +28,7 @@ Manager. It installs as its own car and leaves the stock Caterham alone.
 | Area | Change |
 |---|---|
 | Gearbox | 4-speed, Ford Type E ratios 3.65 / 1.97 / 1.37 / 1.00, final 3.92, open diff |
-| Engine | Low compression 1700 Kent: about 105 bhp at 5,500 rpm, 155 Nm at 3,750, 6,500 limiter |
+| Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 114 bhp at 5,750 rpm, 156 Nm at 4,250, 6,800 limiter |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
 | Skin | `00_british_racing_green`: bare aluminium body, BRG wings and tub, yellow nose, black 7 grille, CAA 692 564 plates |
@@ -36,12 +36,14 @@ Manager. It installs as its own car and leaves the stock Caterham alone.
 
 ## The engine, so far an estimate
 
-![Estimated dyno](dyno/estimate-2026-10-18.png)
+![Estimated dyno](dyno/estimate-2026-10-18-v2.png)
 
-Nobody has put this engine on a dyno yet. The curve above is a guess for a low compression 1700 crossflow on
-twin 40s, sized so the sim car does 80 to 130 km/h in 8 to 10 seconds, which is what the Garmin trace showed on the
-Killarney straight on 14 October 2026 (best lap 1:58.3, 146 km/h on a 140 limit). The grey dashed line is the mod's
-140 bhp Super Sprint for comparison. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
+Nobody has put this engine on a dyno yet. The solid curve is the v2 guess: a 711M 1700 crossflow with a gas-flowed
+head and a performance cam on twin side-draughts, held back by low compression pistons, so the torque peak sits
+around 4,250 rpm and power keeps building to about 5,750. It is sized against the Garmin trace from the Killarney
+straight on 14 October 2026 (80 to 130 km/h in about 9 s, best lap 1:58.3, 146 km/h on a 140 limit): the sim does
+that in 6.7 s if you use 3rd and 4th and 9.9 s in 4th alone, so it is at the top of what the trace allows. The dashed
+lines are the first guess (105 bhp, no cam) and the mod's 140 bhp Super Sprint. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
 the curve, limiter and gearing get updated from it. What would also tighten the physics: the real gearbox and diff
 ratios, the tyre size, and the compression ratio.
 
