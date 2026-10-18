@@ -4,7 +4,7 @@
 
 A 2013 Birkin S3 Lotus Seven replica, British Racing Green with a yellow nose: Ford Kent crossflow, 711M block bored from 1600 to
 1700, gas-flowed head, performance cam, low compression pistons, twin side-draught carbs, wrapped manifolds, 4-speed, live axle, right hand drive,
-registered CAA 692 564 in Cape Town. This repo is its twin for Assetto Corsa, built as a re-tune of Ben O'Bro and
+plated G-SEVEN in the sim. This repo is its twin for Assetto Corsa, built as a re-tune of Ben O'Bro and
 JackCY's **Caterham Super7 1700 Super Sprint RHD** mod (v1.52, physics 2.9) from RaceDepartment.
 
 Only what was changed or added lives here. The original mod's model, sounds and textures are not redistributed,
@@ -31,7 +31,7 @@ Manager. It installs as its own car and leaves the stock Caterham alone.
 | Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 114 bhp at 5,750 rpm, 156 Nm at 4,250, 6,800 limiter |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
-| Skin | `00_british_racing_green`: bare aluminium body, BRG wings and tub, yellow nose, black 7 grille, CAA 692 564 plates |
+| Skin | `00_british_racing_green`: bare aluminium body, BRG wings and tub, yellow nose, black 7 grille, G-SEVEN plates |
 | Dash | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash via CSP `extension/ext_config.ini` |
 
 ## The engine, so far an estimate
