@@ -34,7 +34,7 @@ Manager.
 | Area | Change |
 |---|---|
 | Gearbox | 4-speed, 3.65 / 1.60 / 1.40 / 1.10, final 3.92, open diff (18 Oct 2026, after driving it: 2nd lengthened so it holds through the kink; 3rd went 1.37, 1.30, then a shorter 1.40 because it ran too long down the start straight; 4th shortened from 1.00 to 1.10 because the shift to 4th felt wrong, the revs fell away. His 2nd to 3rd felt realistic) |
-| Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 64 bhp (48 kW) at 5,500 rpm, 95 Nm at 4,250, 6,800 limiter (v7: a peaky cammed Kent, weak below 3,500 rpm, fading fast past 5,500) |
+| Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 65 bhp (48 kW) at 6,250 rpm, 78 Nm at 5,750, 6,800 limiter (v9: weak below about 4,500 rpm, on cam from 5,000, in his words 5,000 rpm is where things start to happen) |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
 | Skin | `00_british_racing_green`: BRG with an aluminium bonnet, yellow grille lip, black 7 grille, silver rims, two side vents on the exhaust side, Union Jack and G. ADONIS on the sides, G-SEVEN plates |
@@ -44,18 +44,18 @@ Manager.
 
 ## The engine, so far an estimate
 
-![Estimated dyno](dyno/estimate-2026-10-18-v7.png)
+![Estimated dyno](dyno/estimate-2026-10-18-v9.png)
 
-Nobody has put this engine on a dyno yet. The solid curve is the v7 guess, shaped from Giovann's notes on driving the sim
-against the real car: the real engine labors in 3rd, picks up speed out of corners more slowly, runs out of breath early (the
-sim let him hold 3rd to the end of the start straight, the real car wants 4th well before the line) and scrubs speed fast. It is
-a cammed 711M 1700 crossflow with a gas-flowed head and low compression pistons: about 64 bhp (48 kW) at 5,500 rpm and 95 Nm at
-4,250, weak below 3,500 rpm and falling away quickly past 5,500. He said he would be shocked to see 60 kW from it and that it could
-still be dejuiced another 5 to 10 percent, so v7 is v6 x 0.92 (about 41 kW at the wheels). Drag already matched a Seven (about 0.87 m2,
-0.22 g on a lift at speed), so only the engine and the 3rd ratio changed. Earlier versions: v2 (114 bhp) drove far too strong (169 km/h
-on the back straight, laps of 1:46 against 131 to 146 km/h and 1:58.6 at Killarney); v3 (91 bhp) and v4 (82 bhp) were flat trims of it,
-v5 (78 bhp) the first peaky shape and v6 (70 bhp) a further scale. The Garmin trace implies more pull than v7 gives at 100 to 130 km/h,
-so the sim is now much slower than the best real runs there; his feel of the real car outranks the trace. The dashed lines are v6 and v2. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
+Nobody has put this engine on a dyno yet. The solid curve is the v9 guess, shaped from Giovann's notes on driving the sim
+against the real car: the engine labors in 3rd, is weak low down, picks up speed out of corners slowly and, in his words, 5,000 rpm is where
+things start to happen. So it is a cammed 711M 1700 crossflow with a gas-flowed head and low compression pistons that does little below about
+4,500 rpm, comes on hard from 5,000 and peaks near 6,000: about 65 bhp (48 kW) at 6,250 rpm and 78 Nm at 5,750. v5 to v8 had a flat plateau
+from 3,000 rpm, the wrong shape, which is why 3rd felt right but the shift to 4th made the revs die (a 6,000 rpm shift landed near 4,350, below the
+cam). With the cam only coming on at 5,000, 4th is 1.10 so a shift at 6,500 lands near 5,100. He said he would be shocked to see 60 kW from it,
+so the peak stays at about 48 kW. Drag already matched a Seven (about 0.87 m2, 0.22 g on a lift at speed). Earlier versions: v2 (114 bhp)
+drove far too strong (169 km/h on the back straight, laps of 1:46 against 131 to 146 km/h and 1:58.6 at Killarney), v3 to v7 trimmed it down
+from 91 to 64 bhp. The Garmin trace implies more pull at 100 to 130 km/h than v9 gives, so the sim is much slower than the best real runs
+there; his feel of the real car outranks the trace. The dashed lines are v7 and v2. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
 the curve, limiter and gearing get updated from it. What would also tighten the physics: the real gearbox and diff
 ratios, the tyre size, and the compression ratio.
 
