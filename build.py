@@ -78,31 +78,42 @@ def main():
     k.add_material('gio_alu_polished', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.5, ksSpecular=1.2, ksSpecularEXP=60, fresnelC=0.3, fresnelEXP=2, fresnelMaxLevel=0.6, **base), {'txDiffuse': 'gio_alu.dds'})
     k.add_material('gio_brg_paint', 'ksPerPixelReflection', dict(ksAmbient=0.45, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=120, fresnelC=0.3, fresnelEXP=3, fresnelMaxLevel=0.12, **base), {'txDiffuse': 'gio_brg.dds'})
     for m in ['dashboard_lp_SUB0', 'dashboard001_SUB0']: k.set_mesh_material(m, 'gio_wood')
-    # the rear deck: a flat body-colour panel instead of the canvas tonneau, press studs hidden
-    import rack_geom as _rg
-    bc = [m for m in _X if m['name'] == 'boot_cover'][0]
+    # the rear deck: one clean body-colour panel on the measured tub rim, built from the old cover's outline
     import struct as _st
-    BV = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
-    BI = np.frombuffer(_b, dtype='<u2', count=bc['ni'], offset=bc['ioff']).copy()
-    Pw = np.c_[BV[:, :3], np.ones(len(BV))] @ bc['world']
+    bc = [m for m in _X if m['name'] == 'boot_cover'][0]
+    BV0 = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
+    Pw = np.c_[BV0[:, :3], np.ones(len(BV0))] @ bc['world']
     def _deck_top(z):   # measured tub rim: 0.722 up to the roll bar, then falling to 0.674 at the rear panel
         return np.where(z > -1.05, 0.726, 0.726 - (-1.05 - z) * (0.05 / 0.34))
-    Pw[:, 1] = _deck_top(Pw[:, 2])
-    Pw[:, 0] *= 1.03; Pw[:, 2] = -1.14 + (Pw[:, 2] + 1.14) * 1.03     # 3% larger so it laps over the rim
-    BV[:, :3] = (Pw[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
+    # outline: convex hull of the cover's footprint, clipped to the tub
+    pts = np.c_[np.clip(Pw[:, 0], -0.487, 0.487), np.clip(Pw[:, 2], -1.378, -0.885)]
+    def _hull(P):
+        P = sorted(set(map(tuple, np.round(P, 4))))
+        def cross(o, a, b): return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+        lo, up = [], []
+        for q in P:
+            while len(lo) >= 2 and cross(lo[-2], lo[-1], q) <= 0: lo.pop()
+            lo.append(q)
+        for q in reversed(P):
+            while len(up) >= 2 and cross(up[-2], up[-1], q) <= 0: up.pop()
+            up.append(q)
+        return lo[:-1] + up[:-1]
+    H = _hull(pts)                                    # counter-clockwise in the (x, z) plane
+    cx, cz = float(np.mean([h[0] for h in H])), float(np.mean([h[1] for h in H]))
     _n = np.array([0.0, 1.0, -0.02]); _n /= np.linalg.norm(_n)
-    BV[:, 3:6] = (_n @ np.linalg.inv(bc['world'][:3, :3])).astype(np.float32)   # normals perpendicular to the slope
-    tri = BI.reshape(-1, 3)
-    # drop triangles that collapsed to zero area (the old rolled edge) so nothing z-fights
-    P3 = Pw[:, :3][tri]; area = np.linalg.norm(np.cross(P3[:, 1] - P3[:, 0], P3[:, 2] - P3[:, 0]), axis=1)
-    BI = tri[area > 1e-6].reshape(-1).astype(np.uint16)
-    # a second green plane 4 mm under the deck, same slope, inside the opening: fills the roll-bar cut-outs seamlessly
-    def _deck_y(z): return float(_deck_top(np.array(z))) - 0.004
-    _q = [(-0.47, -1.385), (0.47, -1.385), (0.47, -0.89), (-0.47, -0.89), (-0.47, -1.05), (0.47, -1.05)]
-    FV = np.array([[x, _deck_y(z), z, _n[0], _n[1], _n[2], 0.5, -0.5, 1, 0, 0] for x, z in _q], dtype=np.float32)
-    FI = np.array([0, 5, 1, 0, 4, 5, 4, 2, 5, 4, 3, 2], dtype=np.int64)    # two quads so the plane bends with the deck
-    FVl = exhaust_geom.to_local(FV.astype(np.float32), bc['world'])
-    k.replace_mesh('boot_cover', np.vstack([BV, FVl]), np.concatenate([BI, (FI + len(BV)).astype(np.uint16)]), material='gio_brg_paint')
+    ring = [(x, float(_deck_top(np.array(z))) + 0.004, z) for x, z in H]
+    verts = [(cx, float(_deck_top(np.array(cz))) + 0.004, cz)] + ring
+    BV = np.array([[x, y, z, *_n, 0.5, -0.5, 1, 0, 0] for x, y, z in verts], dtype=np.float32)
+    tri = []
+    for i in range(len(ring)):
+        a, b = 1 + i, 1 + (i + 1) % len(ring)
+        tri += [0, a, b]                              # fan; flipped below if it faces down
+    BI = np.array(tri, dtype=np.int64)
+    P3 = BV[:, :3][BI.reshape(-1, 3)]; nrm = np.cross(P3[:, 1] - P3[:, 0], P3[:, 2] - P3[:, 0])
+    if nrm[:, 1].mean() < 0: BI = BI.reshape(-1, 3)[:, [0, 2, 1]].reshape(-1)
+    BV[:, :3] = (BV[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
+    BV[:, 3:6] = (_n @ np.linalg.inv(bc['world'][:3, :3])).astype(np.float32)
+    k.replace_mesh('boot_cover', BV, BI.astype(np.uint16), material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
     k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
     for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')
