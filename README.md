@@ -37,8 +37,8 @@ Manager.
 | Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 114 bhp at 5,750 rpm, 156 Nm at 4,250, 6,800 limiter |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
-| Skin | `00_british_racing_green`: bare aluminium body, BRG wings and tub, yellow nose, black 7 grille, G-SEVEN plates |
-| Dash | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash via CSP `extension/ext_config.ini` |
+| Skin | `00_british_racing_green`: BRG with an aluminium bonnet, yellow grille lip, black 7 grille, silver rims, two side vents on the exhaust side, Union Jack and G. ADONIS on the sides, G-SEVEN plates |
+| Dash and trim | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash and wooden rear parcel tray, polished screen frame and black headlight housings via CSP `extension/ext_config.ini` |
 
 ## The engine, so far an estimate
 
@@ -52,6 +52,11 @@ that in 6.7 s if you use 3rd and 4th and 9.9 s in 4th alone, so it is at the top
 lines are the first guess (105 bhp, no cam) and the mod's 140 bhp Super Sprint. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
 the curve, limiter and gearing get updated from it. What would also tighten the physics: the real gearbox and diff
 ratios, the tyre size, and the compression ratio.
+
+## Not done, and why
+
+- The seats' "Lotus 7" orange stitching: the mod's seat fabric is a small repeating tile, so any lettering would repeat all over the seat. Needs the seat remodelled with its own texture layout.
+- The exhaust shape: the mod's 3D model, which this repo does not touch.
 
 ## Layout
 
