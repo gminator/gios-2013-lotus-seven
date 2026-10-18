@@ -36,7 +36,8 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
                 I += ([c, a, b] if ring == 0 else [c, b, a])
     return np.array(V, np.float32), np.array(I, np.int64)
 
-def build(Y=0.135, z_front=0.665, z_rear=-0.405, x_front=0.471, x_rear=0.561, y_hole=0.22, z_hole=0.765, x_panel=0.376):
+def build(Y=0.135, z_front=0.665, z_rear=-0.405, x_front=0.471, x_rear=0.561, y_hole=0.23, z_hole=0.80, x_panel=0.37):
+    # y_hole/z_hole/x_panel: the mod's own 14 x 13 cm cut-out in the left lower panel (the Caterham manifold hole); the elbow goes through it
     """Silencer axis follows the tapering body side (x_front at z_front, x_rear at z_rear). The elbow leaves the flat side
     panel at (x_panel, y_hole, z_hole), comes out into the open and curves down into the top of the silencer's front end."""
     parts = []
@@ -45,9 +46,9 @@ def build(Y=0.135, z_front=0.665, z_rear=-0.405, x_front=0.471, x_rear=0.561, y_
     xe = axis(z_front) + 0.0
     # elbow: from inside the bay, through the panel, out and down into the silencer front
     parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.07, y_hole - 0.01, z_hole - 0.005),
-                        (xe - 0.01, y_hole - 0.05, z_hole - 0.03), (xe, Y + 0.05, z_hole - 0.07), (xe, Y, z_hole - 0.10), (xe, Y, z_hole - 0.14)], 0.034, 1))   # last leg runs 4 cm into the silencer so the join is buried
+                        (xe - 0.01, y_hole - 0.05, z_hole - 0.04), (xe, Y + 0.05, z_hole - 0.09), (xe, Y, z_hole - 0.125), (xe, Y, z_hole - 0.17)], 0.034, 1))   # last leg runs 4 cm into the silencer so the join is buried
     # rubber grommet flush with the panel
-    parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.014, y_hole, z_hole)], 0.054, 3, segs=24, caps=True))
+    parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.014, y_hole, z_hole)], 0.074, 3, segs=28, caps=True))   # fills the cut-out
     # silencer, guard and bands along the angled axis
     parts.append(_tube([(axis(z_front), Y, z_front), (axis(z_rear), Y, z_rear)], 0.062, 0, caps=True))
     parts.append(_tube([(axis(z_front - 0.02), Y, z_front - 0.02), (axis(z_rear + 0.02), Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
