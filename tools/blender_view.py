@@ -1,19 +1,20 @@
-"""Render an OBJ (car axes: y up, z forward) from a fixed view: blender --background --python blender_view.py -- in.obj out.png left|right|top|front"""
+"""Render OBJ files (car axes: x, y up, z forward) from a fixed view: blender --background --python blender_view.py -- a.obj [b.obj ...] out.png left|right|top|front|rear"""
 import bpy, sys, math, random
 argv = sys.argv[sys.argv.index('--') + 1:]
-obj_path, out_png, view = argv[0], argv[1], argv[2]
+out_png, view = argv[-2], argv[-1]
 bpy.ops.wm.read_factory_settings(use_empty=True)
-bpy.ops.wm.obj_import(filepath=obj_path, forward_axis='Z', up_axis='Y')
+for obj_path in argv[:-2]:
+    bpy.ops.wm.obj_import(filepath=obj_path, forward_axis='NEGATIVE_Y', up_axis='Z')   # files are in car axes already (x, y up, z forward)
 scene = bpy.context.scene
 cam_data = bpy.data.cameras.new('cam'); cam_data.type = 'ORTHO'; cam_data.clip_end = 100
 cam = bpy.data.objects.new('cam', cam_data); scene.collection.objects.link(cam); scene.camera = cam
 # Blender frame after import: car y-up becomes Blender z-up, car z-forward becomes Blender -y? we just place cameras on each axis
-views = {
-    'left':  ((10, 0, 0.4), (math.radians(90), 0, math.radians(90))),
-    'right': ((-10, 0, 0.4), (math.radians(90), 0, math.radians(-90))),
-    'top':   ((0, 0, 10), (0, 0, 0)),
-    'front': ((0, -10, 0.4), (math.radians(90), 0, 0)),
-    'rear':  ((0, 10, 0.4), (math.radians(90), 0, math.radians(180))),
+views = {   # camera looks along -local z; up is local y
+    'left':  ((10, 0.4, 0), (0, math.radians(90), 0)),      # from +x looking toward -x, car nose to the right? (nose = +z)
+    'right': ((-10, 0.4, 0), (0, math.radians(-90), 0)),
+    'top':   ((0, 10, 0), (math.radians(-90), 0, 0)),
+    'front': ((0, 0.4, 10), (0, 0, 0)),
+    'rear':  ((0, 0.4, -10), (0, math.radians(180), 0)),
 }
 cam.location, cam.rotation_euler = views[view]; cam_data.ortho_scale = 3.8
 scene.render.engine = 'BLENDER_WORKBENCH'

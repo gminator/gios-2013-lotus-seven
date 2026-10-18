@@ -3,7 +3,7 @@
 
     python3 build.py ~/Downloads/bo_caterham_1700-v1.52.7z [out_dir]
 
-Needs bsdtar (macOS/Linux) to unpack the 7z, and Pillow is NOT needed: textures ship pre-built in overlay/.
+Needs bsdtar (macOS/Linux) to unpack the 7z and numpy (for the exhaust geometry); textures ship pre-built in overlay/.
 Produces out_dir/bo_birkin_s3_1700_kent/ and out_dir/bo_birkin_s3_1700_kent.zip.
 """
 import os, shutil, subprocess, sys, tempfile, json
@@ -72,6 +72,18 @@ def main():
     for m in ['dashboard_lp_SUB0', 'dashboard001_SUB0', 'boot_cover']: k.set_mesh_material(m, 'gio_wood')
     for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')
     k.set_mesh_material('parbrise_chassis_SUB0', 'gio_alu_polished')
+    # his side exhaust: elbow out of the panel, long silencer in a mesh guard, tailpipe bending down ahead of the rear wheel
+    import numpy as np, exhaust_geom
+    from kn5 import parse as _parse
+    _b, _v, _T, _M, _X = _parse(CAR + '.kn5'); ex = [m for m in _X if m['name'] == 'exhaust'][0]
+    V, I = exhaust_geom.build(); V = exhaust_geom.to_local(V, ex['world'])
+    k.add_texture('gio_exhaust.dds', os.path.join(ov, 'kn5_textures', 'gio_exhaust.dds'))
+    k.add_material('gio_exhaust', 'ksPerPixelAT', dict(ksAmbient=0.45, ksDiffuse=0.55, ksSpecular=0.9, ksSpecularEXP=35, ksEmissive=0, ksAlphaRef=0.5), {'txDiffuse': 'gio_exhaust.dds'})
+    k.replace_mesh('exhaust', V, I, material='gio_exhaust')
+    k.replace_mesh('exhaust_attach', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))   # the mod's brackets, hidden
+    # seats: 'LOTUS 7' stitched on the headrests (own texture patch per seat)
+    import seats
+    seats.apply(k, _b, _X, ov)
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')

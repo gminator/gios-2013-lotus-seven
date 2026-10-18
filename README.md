@@ -26,7 +26,7 @@ stock Caterham alone. That zip contains the base mod's model, sounds and texture
 python3 build.py ~/Downloads/bo_caterham_1700-v1.52.7z
 ```
 
-Python 3 and `bsdtar` (on macOS by default). Output: `build/bo_birkin_s3_1700_kent/` and a zip to drag into Content
+Python 3 with numpy, and `bsdtar` (on macOS by default). Output: `build/bo_birkin_s3_1700_kent/` and a zip to drag into Content
 Manager.
 
 ## What is different from the stock mod
@@ -38,6 +38,8 @@ Manager.
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
 | Skin | `00_british_racing_green`: BRG with an aluminium bonnet, yellow grille lip, black 7 grille, silver rims, two side vents on the exhaust side, Union Jack and G. ADONIS on the sides, G-SEVEN plates |
+| Exhaust | Remodelled to his: wrapped elbow out of the side panel, long silencer in an expanded-metal guard with three bands, bare tailpipe bending down ahead of the rear wheel (`tools/exhaust_geom.py`, written into the kn5 by the build) |
+| Seats | "LOTUS 7" in orange stitching on both headrests (`tools/seats.py`: the headrest fronts get their own texture patch) |
 | Dash and trim | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash and wooden rear parcel tray, polished screen frame and black headlight housings via CSP `extension/ext_config.ini` |
 
 ## The engine, so far an estimate
@@ -53,10 +55,13 @@ lines are the first guess (105 bhp, no cam) and the mod's 140 bhp Super Sprint. 
 the curve, limiter and gearing get updated from it. What would also tighten the physics: the real gearbox and diff
 ratios, the tyre size, and the compression ratio.
 
-## Not done, and why
+## Track days
 
-- The seats' "Lotus 7" orange stitching: the mod's seat fabric is a small repeating tile, so any lettering would repeat all over the seat. Needs the seat remodelled with its own texture layout.
-- The exhaust shape: the mod's 3D model, which this repo does not touch.
+- [Killarney, 14 October 2026](trackday/2026-10-14/): first track day, 16 flying laps, best 1:58.6, 146 km/h. Speed heat map, racing lines, lap times and the best-lap trace from the Garmin.
+
+![Killarney heat map](trackday/2026-10-14/heatmap.png)
+
+![Lap times](trackday/2026-10-14/laptimes.png)
 
 ## Layout
 

@@ -46,7 +46,7 @@ def parse(path):
             nv=r.i(); voff=r.p; r.raw(nv*76)
             ni=r.i(); ioff=r.p; r.raw(ni*2)
             mat=r.i(); layer=r.i(); r.f(); r.f()
-            meshes.append(dict(name=name,parent=parent,nv=nv,voff=voff,ni=ni,ioff=ioff,mat=mat,skinned=True))
+            meshes.append(dict(name=name,parent=parent,nv=nv,voff=voff,ni=ni,ioff=ioff,mat=mat,skinned=True,world=wm,nstart=nstart,nend=r.p,nch=nch))
         for _ in range(nch): node(depth+1,name,wm)
     node(0,None)
     return b,ver,textures,materials,meshes

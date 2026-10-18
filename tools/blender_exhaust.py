@@ -69,5 +69,5 @@ for z in (0.84, 0.30, -0.10, -0.40):   # black guard bands as short wider rings
 # tailpipe: out of the silencer rear, then a 90 degree bend down and slightly outward, ending in front of the rear wheel
 tube('tail', [V((X + 0.115, 0.215, -0.42)), V((X + 0.115, 0.215, -0.50)), V((X + 0.12, 0.205, -0.54)), V((X + 0.125, 0.18, -0.565)), V((X + 0.13, 0.145, -0.575)), V((X + 0.13, 0.10, -0.575))], 0.03, 0)
 bpy.ops.object.select_all(action='SELECT')
-bpy.ops.wm.obj_export(filepath=out_obj, forward_axis='Z', up_axis='Y', export_materials=False, export_uv=True, export_normals=True)
+bpy.ops.wm.obj_export(filepath=out_obj, forward_axis='NEGATIVE_Y', up_axis='Z', export_materials=False, export_uv=True, export_normals=True)   # identity: geometry is already in car axes
 print('exported', out_obj, 'objects', len(bpy.data.objects))
