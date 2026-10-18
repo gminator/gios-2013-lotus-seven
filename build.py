@@ -106,8 +106,8 @@ def main():
     # seats: LOTUS over 7 stitched on the seat backs (own texture patch per seat)
     import seats
     seats.apply(k, _b, _X, ov)
-    # his harness has no cross pad: remove the mod's pad (the big label region of tex_misc) from the belt meshes
-    k.hide_uv_region('belt_text', 14 / 1024, 652 / 1024, 455 / 1024, 616 / 1024)
+    # his harness has no cross pad: remove the mod's pad (the narrow label strip of tex_misc) from the belt meshes; the strap tags (big patch) stay
+    k.hide_uv_region('belt_text', 733 / 1024, 757 / 1024, 558 / 1024, 782 / 1024)
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
