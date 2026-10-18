@@ -205,3 +205,14 @@ def hide_where(self, material_name, pred):
         self.replace_mesh(x['name'], _np.vstack([V, _np.array(extra, dtype=_np.float32)]), newtri.reshape(-1).astype(_np.uint16))
         print(f"hid {hit.sum()} of {len(tri)} triangles on {x['name']}")
 Kn5Mod.hide_where = hide_where
+
+def translate_mesh(self, mesh_name, dx, dy, dz):
+    """Move a mesh by a world-space offset (metres), keeping everything else about it."""
+    import struct
+    x = [m for m in self.X if m['name'] == mesh_name][0]
+    V = _np.array([struct.unpack_from('<11f', self.b, x['voff'] + i * 44) for i in range(x['nv'])], dtype=_np.float32)
+    I = _np.frombuffer(self.b, dtype='<u2', count=x['ni'], offset=x['ioff']).copy()
+    d_local = _np.array([dx, dy, dz]) @ _np.linalg.inv(x['world'][:3, :3])
+    V[:, :3] += d_local.astype(_np.float32)
+    self.replace_mesh(mesh_name, V, I)
+Kn5Mod.translate_mesh = translate_mesh
