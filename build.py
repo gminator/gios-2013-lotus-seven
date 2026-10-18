@@ -125,15 +125,6 @@ def main():
         k.translate_mesh(m, -0.04, 0.236, -0.095)
     for m in ['mirror_side', 'mirror_side_glass', 'mirror_side_handle_SUB0', 'mirror_side_handle_SUB1']:
         k.translate_mesh(m, 0.04, 0.236, -0.095)
-    # centre mirror stands on a block in the middle of the dash top
-    import struct as _st2
-    for m in ['mirror', 'MIRROR_C']:
-        k.translate_mesh(m, 0.0, -0.168, 0.07)
-    k.translate_mesh('mirror002', 0.0, -0.168, 0.07)
-    # the wooden block it stands on, on the green scuttle top (replaces the mod's chrome base plate, Object008)
-    ob = [m for m in _X if m['name'] == 'Object008'][0]
-    BV, BI = _rg._box((0.0, 0.755, -0.02), (0.045, 0.05, 0.035), 3)
-    k.replace_mesh('Object008', exhaust_geom.to_local(BV.astype(np.float32), ob['world']), BI.astype(np.uint16), material='gio_wood')
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
