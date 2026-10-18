@@ -4,9 +4,9 @@ then give the forward-facing seat-back triangles their own planar mapping onto a
 that repeats the fabric and carries the stitching (one patch per seat). The game reads v from the bottom: image_y = 1 + v."""
 import struct, numpy as np
 from PIL import Image, ImageDraw, ImageFont
-SCALE, UOFF, VOFF = 4.6, 1.8, 0.3
+SCALE, UOFF, VOFF = 4.6, 1.8, 1.4        # chosen so every seat vertex lands inside 0..0.78 of the texture, nothing wraps into the patches
 S = 2048
-SEATS = {'sit L_SUB0': (60, 1560, 960, 2040), 'sit R_SUB0': (1080, 1560, 1980, 2040)}   # text patches in pixels (x0, y0, x1, y1)
+SEATS = {'sit L_SUB0': (60, 1630, 960, 2040), 'sit R_SUB0': (1080, 1630, 1980, 2040)}   # text patches in pixels (x0, y0, x1, y1)
 
 def _verts(b, x):
     V = np.array([struct.unpack_from('<11f', b, x['voff'] + i * 44) for i in range(x['nv'])], dtype=np.float32)
