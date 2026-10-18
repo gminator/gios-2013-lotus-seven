@@ -95,3 +95,5 @@ ratios, the tyre size, and the compression ratio.
 
 Model, textures, sound: Ben O'Bro. Physics research: JackCY (Jaroslav Černý). Thank you both; please support them on
 RaceDepartment. The re-tune, livery and dash are Giovann Adonis's, for his own car.
+
+`tools/blender_sprites.py` renders the built car (exported with `tools/kn5_to_obj_full.py`) from a fixed three-quarter top camera at 72 headings on a transparent background, for dashboards and maps: `blender --background --python tools/blender_sprites.py -- car.obj out_dir 72 256 58`.
