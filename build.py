@@ -78,15 +78,16 @@ def main():
     k.add_material('gio_alu_polished', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.5, ksSpecular=1.2, ksSpecularEXP=60, fresnelC=0.3, fresnelEXP=2, fresnelMaxLevel=0.6, **base), {'txDiffuse': 'gio_alu.dds'})
     k.add_material('gio_brg_paint', 'ksPerPixelReflection', dict(ksAmbient=0.45, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=120, fresnelC=0.3, fresnelEXP=3, fresnelMaxLevel=0.12, **base), {'txDiffuse': 'gio_brg.dds'})
     for m in ['dashboard_lp_SUB0', 'dashboard001_SUB0']: k.set_mesh_material(m, 'gio_wood')
-    # the rear deck: fill the body's own boot opening (a hole in the body mesh) using its exact edge vertices,
-    # so the panel meets the bodywork with no overhang and no gap
-    import hole_cap
+    # the rear deck: the mod's own boot cover shape (modelled to fit the tub exactly: no overhang, no holes), painted
+    # body colour, with every normal pointing straight up so its rolled edge lights like the top instead of going dark
+    import struct as _st
     bc = [m for m in _X if m['name'] == 'boot_cover'][0]
-    bd = [m for m in _X if m['name'] == 'body'][0]
-    BV, BI, _L, _ok, _tot = hole_cap.cap(_b, bd, (0.0, 0.69, -1.19), lift=0.0)
-    BV[:, :3] = (BV[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
-    BV[:, 3:6] = (np.array([0.0, 1.0, 0.0]) @ np.linalg.inv(bc['world'][:3, :3])).astype(np.float32)
-    k.replace_mesh('boot_cover', BV, BI.astype(np.uint16), material='gio_brg_paint')
+    BV = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
+    BI = np.frombuffer(_b, dtype='<u2', count=bc['ni'], offset=bc['ioff']).copy()
+    Rinv = np.linalg.inv(bc['world'][:3, :3])
+    BV[:, 3:6] = (np.array([0.0, 1.0, 0.0]) @ Rinv).astype(np.float32)
+    BV[:, 8:11] = (np.array([1.0, 0.0, 0.0]) @ Rinv).astype(np.float32)
+    k.replace_mesh('boot_cover', BV, BI, material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
     k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
     for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')
