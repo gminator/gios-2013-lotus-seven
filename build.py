@@ -85,11 +85,13 @@ def main():
     BV = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
     BI = np.frombuffer(_b, dtype='<u2', count=bc['ni'], offset=bc['ioff']).copy()
     Pw = np.c_[BV[:, :3], np.ones(len(BV))] @ bc['world']
-    Pw[:, 1] = 0.645 + 0.25 * (Pw[:, 1] - 0.645)             # take the dome out of the tonneau: a near-flat deck on the tub's own outline
+    Pw[:, 1] = 0.705                                          # one flat plane, flush with the tub rim (the domed cover sat below it and read as a dark ledge)
     BV[:, :3] = (Pw[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
-    Nw = BV[:, 3:6] @ bc['world'][:3, :3]; tri = BI.reshape(-1, 3)
-    keep = Nw[tri, 1].mean(axis=1) > 0.6                   # drop the cover's rolled edge (side-facing faces); keep the top surface
-    BI = tri[keep].reshape(-1).astype(np.uint16)
+    BV[:, 3:6] = (np.array([0.0, 1.0, 0.0]) @ np.linalg.inv(bc['world'][:3, :3])).astype(np.float32)   # all normals straight up
+    tri = BI.reshape(-1, 3)
+    # drop triangles that collapsed to zero area (the old rolled edge) so nothing z-fights
+    P3 = Pw[:, :3][tri]; area = np.linalg.norm(np.cross(P3[:, 1] - P3[:, 0], P3[:, 2] - P3[:, 0]), axis=1)
+    BI = tri[area > 1e-6].reshape(-1).astype(np.uint16)
     # a flat green floor just under the deck so the roll-bar cut-outs show paint, not the dark boot
     FV, FI = _rg._box((0.0, 0.652, -1.14), (0.96, 0.008, 0.52), 1)
     FVl = exhaust_geom.to_local(FV.astype(np.float32), bc['world'])
