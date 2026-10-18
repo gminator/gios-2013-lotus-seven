@@ -164,3 +164,26 @@ def _save_with_swaps(self, path):
         if x['name'] in swaps: assert x['nv'] == len(swaps[x['name']][0]), x['name']
     return path
 Kn5Mod.save = _save_with_swaps
+
+def hide_uv_region(self, material_name, u0, u1, vimg0, vimg1):
+    """Collapse every triangle of meshes using `material_name` whose texture coordinates fall inside the region
+    (u in u0..u1, image-v in vimg0..vimg1, with image_y = 1 + v). Used to remove the mod's harness cross pad."""
+    import struct
+    for x in self.X:
+        if self.M[x['mat']]['name'] != material_name or x.get('skinned'): continue
+        V = _np.array([struct.unpack_from('<11f', self.b, x['voff'] + i * 44) for i in range(x['nv'])], dtype=_np.float32)
+        I = _np.frombuffer(self.b, dtype='<u2', count=x['ni'], offset=x['ioff']).copy()
+        tri = I.reshape(-1, 3)
+        u = V[:, 6]; v = 1.0 + V[:, 7]
+        inside = (u > u0) & (u < u1) & (v > vimg0) & (v < vimg1)
+        hit = inside[tri].all(axis=1)
+        if not hit.any(): continue
+        # duplicate the vertices of the hit triangles and collapse the copies to a point
+        extra = []; newtri = tri.copy()
+        for k in _np.where(hit)[0]:
+            for j in range(3):
+                nv = V[tri[k, j]].copy(); nv[:3] = V[tri[k, 0], :3]; extra.append(nv); newtri[k, j] = len(V) + len(extra) - 1
+        V2 = _np.vstack([V, _np.array(extra, dtype=_np.float32)])
+        self.replace_mesh(x['name'], V2, newtri.reshape(-1).astype(_np.uint16))
+        print(f"hid {hit.sum()} triangles on {x['name']}")
+Kn5Mod.hide_uv_region = hide_uv_region
