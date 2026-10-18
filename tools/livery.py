@@ -18,17 +18,17 @@ def aluminium():
     return alu.filter(ImageFilter.GaussianBlur(0.6))
 
 def chrome_vent():
-    """raised chrome louvre vent, 3 slots, about 0.19 x 0.09 m, with a bevelled frame"""
+    """raised chrome louvre vent, 3 bright angled blades, about 0.19 x 0.09 m, bevelled frame; only thin shadow lines"""
     w, h = int(56 * sc), int(28 * sc); im = Image.new('RGBA', (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, w - 1, h - 1], fill=(60, 60, 62, 255))                      # shadow under the raised frame
-    d.rectangle([2, 0, w - 1, h - 3], fill=(215, 218, 222, 255))                    # frame top, lit
-    d.rectangle([6, 4, w - 5, h - 7], fill=(165, 168, 172, 255))                    # frame inner bevel
+    d.rectangle([0, 0, w - 1, h - 1], fill=(70, 70, 72, 255))                      # shadow under the raised frame
+    d.rectangle([2, 0, w - 1, h - 3], fill=(222, 225, 229, 255))                    # frame top, lit
+    d.rectangle([6, 4, w - 5, h - 7], fill=(150, 153, 158, 255))                    # inner bevel
     sw = (w - 18) / 3
     for i in range(3):
         sx = 9 + i * sw
-        d.rectangle([sx + 2, 7, sx + sw - 2, h - 10], fill=(28, 28, 30, 255))      # dark opening
-        d.rectangle([sx + 2, 7, sx + sw - 2, 11], fill=(120, 122, 126, 255))        # louvre lip catching light
-        d.rectangle([sx + 2, h - 14, sx + sw - 2, h - 10], fill=(8, 8, 8, 255))
+        d.rectangle([sx + 2, 7, sx + sw - 2, h - 10], fill=(196, 199, 204, 255))    # blade face, bright metal
+        d.rectangle([sx + 2, 7, sx + sw - 2, 10], fill=(240, 242, 245, 255))        # top edge catching light
+        d.rectangle([sx + 2, h - 13, sx + sw - 2, h - 10], fill=(60, 60, 64, 255))  # thin shadow under the blade
     return im
 
 def crossed_flags():
