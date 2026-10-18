@@ -1,5 +1,6 @@
 """Driving report from a recorded Assetto Corsa session: one page per thing to work on.
-    python3 tools/sim_report.py <telemetry.db> <session_id> <out.pdf>"""
+    python3 tools/sim_report.py <telemetry.db> <session_id> <out.pdf>
+Needs smooth_engine.py and coach.py from the telemetry project next to telemetry.db (it leaves out replays of earlier laps)."""
 import sqlite3, sys, math, numpy as np
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -9,6 +10,18 @@ con = sqlite3.connect(db)
 cols = ['t', 'speed_kmh', 'gas', 'brake', 'clutch', 'rpm', 'steer', 'gear', 'g_horizontal', 'g_frontal', 'lap_count', 'position_normalized', 'slip_ratio_rl', 'slip_ratio_rr', 'x', 'z']
 R = np.array(con.execute(f"select {','.join(cols)} from samples where session_id=? order by t", (sid,)).fetchall(), float)
 _, u = np.unique(R[:, 0], return_index=True); R = R[u]                       # the recorder stored some stretches twice
+# the game's own replay of earlier laps is recorded like driving: find it from repeated lap times and drop it
+sys.path.insert(0, str(__import__('pathlib').Path(db).resolve().parent))
+from smooth_engine import Engine, COLS as ECOLS
+_eng = Engine(); _drop = []
+for _r in con.execute(f"select {','.join(ECOLS)} from samples where session_id=? order by t", (sid,)):
+    _eng.feed(_r)
+    if _eng.replaying: _drop.append(_r[0])
+if _eng.replay_runs:
+    # rows fed before the replay was recognised (its first lap) belong to the same run: drop from the run's start
+    _cut = min(_eng.run_starts[r] for r in _eng.replay_runs)
+    R = R[R[:, 0] < _cut]
+    print('replay of earlier laps found and left out from', round(_cut), 's on')
 C = {n: R[:, i] for i, n in enumerate(cols)}
 t, v, gas, brk, rpm, steer, gear = C['t'], C['speed_kmh'], C['gas'], C['brake'], C['rpm'], C['steer'], C['gear']
 dt = np.median(np.diff(t))
