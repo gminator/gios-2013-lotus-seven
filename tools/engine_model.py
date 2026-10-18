@@ -1,13 +1,14 @@
-"""v3, 18 Oct 2026 (evening): v2 trimmed by 20 percent, see POWER_TRIM. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
+"""v4, 18 Oct 2026 (night): v2 trimmed by 28 percent, see POWER_TRIM. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
 Generate power.lut (wheel torque, 13% loss like the original) + ui curves for the Birkin Kent 1700,
 and sanity-check acceleration against the stock Caterham, calibrated on the sim telemetry."""
 import json, math, sys
 car=sys.argv[1]
 # crank torque curve (Nm) for a low-compression 1700 Kent crossflow on twin 40 DCOEs, ~105 bhp @ 5500
 crank={1000:104,1250:114,1500:123,1750:130,2000:136,2250:140,2500:143,2750:145,3000:147,3250:149,3500:151,3750:153,4000:155,4250:156,4500:156,4750:155,5000:153,5250:150,5500:146,5750:141,6000:134,6250:126,6500:116,6750:104,7000:90}
-# v3: after driving the sim he said it was definitely too much power. v2 gave 169 km/h on the back straight and laps of 1:46,
-# against 131 to 146 km/h and 1:58.6 at Killarney. A 20 percent trim brings the model's 80 to 130 km/h to 9.2 s (real best 9.0 s).
-POWER_TRIM = 0.80
+# v3 (0.80) still felt too strong. Measured against the Garmin trace from Killarney: v3 matched the real 100 to 130 km/h pull
+# (6.4 to 7.0 s sim, 6.0 to 6.9 s real) but real 80 to 130 km/h pulls typically take 10 to 11 s and the model gave 9.2 s.
+# 0.72 puts the model at about 10.8 s, the real median, and cuts the back-straight speed a little further.
+POWER_TRIM = 0.72
 crank = {r: round(t * POWER_TRIM) for r, t in crank.items()}
 LOSS=0.87
 lut=[(0,0),(250,0),(500,0),(750,0)]+[(r,round(t*LOSS,1)) for r,t in sorted(crank.items())]+[(r,0) for r in range(7250,10001,250)]
@@ -19,15 +20,15 @@ ui=json.load(open(f'{car}/ui/ui_car.json'))
 ui.update({
  "name":"Birkin S3 1700 Kent (Giovann)","brand":"Birkin","class":"street","country":"South Africa","year":2013,"version":"1.52-giovann",
  "author":"Ben O'Bro & JackCY (mod); Birkin re-tune for Giovann Adonis",
- "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 91 bhp at 5,750 rpm and 125 Nm at 4,250 rpm at the crank (trimmed 20 percent after the first version drove too strong), 6,800 rpm limiter, Ford Type E gear ratios 3.65 / 1.60 / 1.30 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
- "specs":{"bhp":"91bhp/5750rpm","torque":"125Nm/4250rpm","weight":"650 kg","topspeed":"157km/h","acceleration":"8.8s 0-100km/h","pwratio":"7.1 kg/hp"},
+ "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 82 bhp at 5,750 rpm and 112 Nm at 4,250 rpm at the crank (trimmed 28 percent from the first version, which drove too strong), 6,800 rpm limiter, Ford Type E gear ratios 3.65 / 1.60 / 1.30 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
+ "specs":{"bhp":"82bhp/5750rpm","torque":"112Nm/4250rpm","weight":"650 kg","topspeed":"155km/h","acceleration":"9.9s 0-100km/h","pwratio":"7.9 kg/hp"},
  "tags":["rwd","street","lightweight","trackday","manual","South Africa","birkin","kent","rhd","4speed"],
  "powerCurve":[[float(r),round(hp(r,t),1)] for r,t in sorted(crank.items())],
  "torqueCurve":[[float(r),float(t)] for r,t in sorted(crank.items())]})
 json.dump(ui,open(f'{car}/ui/ui_car.json','w'),indent=2,ensure_ascii=False)
 import os
 if os.path.isdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno')):
-    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno','estimate-2026-10-18-v3.csv'),'w') as f:
+    with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','dyno','estimate-2026-10-18-v4.csv'),'w') as f:
         f.write('rpm,torque_nm_crank,power_bhp_crank\n')
         for r,t in sorted(crank.items()): f.write(f'{r},{t},{hp(r,t):.1f}\n')
 # ---- longitudinal sanity model, calibrated so the STOCK car reproduces the sim telemetry (1.44 m/s2 @110 in 4th, 2.33 @100 in 3rd)

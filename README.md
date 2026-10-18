@@ -34,7 +34,7 @@ Manager.
 | Area | Change |
 |---|---|
 | Gearbox | 4-speed, 3.65 / 1.60 / 1.30 / 1.00, final 3.92, open diff (2nd and 3rd lengthened after driving it, 18 Oct 2026: 2nd now runs to about 119 km/h so it holds through the kink) |
-| Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 91 bhp at 5,750 rpm, 125 Nm at 4,250, 6,800 limiter (trimmed 20 percent in v3, the first version drove too strong) |
+| Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 82 bhp at 5,750 rpm, 112 Nm at 4,250, 6,800 limiter (trimmed 28 percent in v4, the first versions drove too strong) |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
 | Skin | `00_british_racing_green`: BRG with an aluminium bonnet, yellow grille lip, black 7 grille, silver rims, two side vents on the exhaust side, Union Jack and G. ADONIS on the sides, G-SEVEN plates |
@@ -44,14 +44,14 @@ Manager.
 
 ## The engine, so far an estimate
 
-![Estimated dyno](dyno/estimate-2026-10-18-v3.png)
+![Estimated dyno](dyno/estimate-2026-10-18-v4.png)
 
-Nobody has put this engine on a dyno yet. The solid curve is the v3 guess. A 711M 1700 crossflow with a gas-flowed
+Nobody has put this engine on a dyno yet. The solid curve is the v4 guess. A 711M 1700 crossflow with a gas-flowed
 head and a performance cam on twin side-draughts, held back by low compression pistons, so the torque peak sits
-around 4,250 rpm and power keeps building to about 5,750. v2 (114 bhp) drove too strong in the sim: 169 km/h on the back
-straight and laps of 1:46, against 131 to 146 km/h and 1:58.6 at Killarney on 14 October 2026. v3 takes 20 percent off, which
-gives about 91 bhp, an 80 to 130 km/h pull of about 9 s (the Garmin trace shows 9 s at best, 10 to 12 s typically) and a
-back-straight speed in the mid 150s. The dashed lines are v2 and the mod's 140 bhp Super Sprint. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
+around 4,250 rpm and power keeps building to about 5,750. v2 (114 bhp) drove far too strong: 169 km/h on the back straight
+and laps of 1:46, against 131 to 146 km/h and 1:58.6 at Killarney on 14 October 2026. v3 (91 bhp) matched the real 100 to 130
+km/h pull (6.4 to 7.0 s, real 6.0 to 6.9 s) but still felt too strong, and the Garmin trace shows real 80 to 130 km/h pulls
+typically take 10 to 11 s. v4 (82 bhp) puts the model at about 10.8 s. The dashed lines are v3 and v2. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
 the curve, limiter and gearing get updated from it. What would also tighten the physics: the real gearbox and diff
 ratios, the tyre size, and the compression ratio.
 

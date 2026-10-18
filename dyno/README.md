@@ -2,9 +2,9 @@
 
 `estimate-2026-10-18` was the first guess (105 bhp at 5,500, 155 Nm at 3,750, 6,500 limiter). `estimate-2026-10-18-v2`
 is v2: the 711M block, gas-flowed head and performance cam, about 114 bhp at 5,750 rpm and 156 Nm at 4,250 at the crank, 6,800 rpm
-limiter. It drove too strong, so `estimate-2026-10-18-v3` is the current one: v2 trimmed 20 percent, about 91 bhp at 5,750 rpm and
-125 Nm at 4,250. `stock-caterham-1700ss-mod` is the mod's own curve. None of these is a measurement. v3 was sized so the
-sim does 80 to 130 km/h in about 9 s like the Garmin trace from Killarney on 14 October 2026.
+limiter. It drove far too strong. `estimate-2026-10-18-v3` is v2 trimmed 20 percent (91 bhp). `estimate-2026-10-18-v4` is the current
+one: v2 trimmed 28 percent, about 82 bhp at 5,750 rpm and 112 Nm at 4,250. `stock-caterham-1700ss-mod` is the mod's own curve. None of these is a measurement. v4 was sized so the
+sim does 80 to 130 km/h in about 10.8 s, the median of the real runs like the Garmin trace from Killarney on 14 October 2026.
 
 ## When the car has been on a dyno
 
