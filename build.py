@@ -120,12 +120,22 @@ def main():
     # his harness has no cross pad: remove the mod's pad (the narrow label strip of tex_misc) from the belt meshes; the strap tags (big patch) stay
     k.hide_where('tex_misc', lambda x, y, z: 0.56 < y < 0.95 and abs(abs(x) - 0.265) < 0.11 and -1.0 < z < -0.5)   # harness cross pads and the pads behind the headrests live in the misc-badges mesh
     k.hide_where('belt_text', lambda x, y, z: z < -0.65)
-    # side mirrors up to the top corners of the screen pillars, as on his car (the centre mirror is already on the top rail)
-    for m in ['mirror_side', 'mirror_side_glass', 'mirror_side_handle_SUB0', 'mirror_side_handle_SUB1',
-              'mirror_sideL', 'mirror_side_glassL', 'mirror_side_handleL_SUB0', 'mirror_side_handleL_SUB1']:
-        k.translate_mesh(m, 0.0, 0.21, -0.03)
-    for m in ['mirror', 'mirror002', 'MIRROR_C']:            # centre mirror sits on the dash top on his car
-        k.translate_mesh(m, 0.0, -0.22, 0.03)    # harness tags on and behind the seat backs go; only the two on the shoulder straps in front stay
+    # side mirrors clamp onto the top of the screen pillars (pillar tops at x +-0.412, y 0.956, z -0.055)
+    for m in ['mirror_sideL', 'mirror_side_glassL', 'mirror_side_handleL_SUB0', 'mirror_side_handleL_SUB1']:
+        k.translate_mesh(m, -0.04, 0.236, -0.095)
+    for m in ['mirror_side', 'mirror_side_glass', 'mirror_side_handle_SUB0', 'mirror_side_handle_SUB1']:
+        k.translate_mesh(m, 0.04, 0.236, -0.095)
+    # centre mirror stands on a block in the middle of the dash top
+    import struct as _st2
+    for m in ['mirror', 'MIRROR_C']:
+        k.translate_mesh(m, 0.0, -0.168, 0.07)
+    mm = [m for m in _X if m['name'] == 'mirror002'][0]
+    MV = np.array([_st2.unpack_from('<11f', _b, mm['voff'] + i * 44) for i in range(mm['nv'])], dtype=np.float32)
+    MI = np.frombuffer(_b, dtype='<u2', count=mm['ni'], offset=mm['ioff']).copy()
+    MV[:, :3] += (np.array([0.0, -0.168, 0.07]) @ np.linalg.inv(mm['world'][:3, :3])).astype(np.float32)
+    BV, BI = _rg._box((0.0, 0.755, -0.02), (0.045, 0.05, 0.035), 3)
+    BVl = exhaust_geom.to_local(BV.astype(np.float32), mm['world'])
+    k.replace_mesh('mirror002', np.vstack([MV, BVl]), np.concatenate([MI, (BI + len(MV)).astype(np.uint16)]))
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
