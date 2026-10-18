@@ -48,10 +48,7 @@ def build(Y=0.135, z_front=0.665, z_rear=-0.405, x_front=0.471, x_rear=0.561, y_
     parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.07, y_hole - 0.01, z_hole - 0.005),
                         (xe - 0.01, y_hole - 0.05, z_hole - 0.04), (xe, Y + 0.05, z_hole - 0.09), (xe, Y, z_hole - 0.125), (xe, Y, z_hole - 0.17)], 0.034, 1))   # last leg runs 4 cm into the silencer so the join is buried
     # rubber grommet flush with the panel
-    parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.014, y_hole, z_hole)], 0.074, 3, segs=28, caps=True))   # fills the cut-out
-    # square black plate behind the ring so the corners of the rectangular cut-out are covered too
-    from rack_geom import _box
-    parts.append(_box((x_panel - 0.006, y_hole, z_hole), (0.008, 0.17, 0.18), 3))
+    parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.012, y_hole, z_hole)], 0.097, 3, segs=36, caps=True))   # round grommet wide enough to cover the rectangular cut-out's corners
     # silencer, guard and bands along the angled axis
     parts.append(_tube([(axis(z_front), Y, z_front), (axis(z_rear), Y, z_rear)], 0.062, 0, caps=True))
     parts.append(_tube([(axis(z_front - 0.02), Y, z_front - 0.02), (axis(z_rear + 0.02), Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
