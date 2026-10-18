@@ -107,7 +107,7 @@ def main():
     import seats
     seats.apply(k, _b, _X, ov)
     # his harness has no cross pad: remove the mod's pad (the narrow label strip of tex_misc) from the belt meshes; the strap tags (big patch) stay
-    k.hide_where('belt_text', lambda x, y, z: 0.56 < y < 0.72 and abs(abs(x) - 0.265) < 0.09)   # the pad sits across the seat centre near the top
+    k.hide_where('tex_misc', lambda x, y, z: 0.56 < y < 0.74 and abs(abs(x) - 0.265) < 0.11 and -1.0 < z < -0.5)   # the harness cross pad lives in the misc-badges mesh, across the seat centre near the top
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
