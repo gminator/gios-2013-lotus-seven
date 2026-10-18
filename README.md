@@ -33,7 +33,7 @@ Manager.
 
 | Area | Change |
 |---|---|
-| Gearbox | 4-speed, 3.65 / 1.60 / 1.40 / 1.10, final 3.92, open diff (18 Oct 2026, after driving it: 2nd lengthened so it holds through the kink; 3rd went 1.37, 1.30, then a shorter 1.40 because it ran too long down the start straight; 4th shortened from 1.00 to 1.10 because the shift to 4th felt wrong, the revs fell away. His 2nd to 3rd felt realistic) |
+| Gearbox | 4-speed, 2.55 / 1.75 / 1.40 / 1.10, final 3.92, open diff. Evenly spaced for an engine that only comes on at 5,000 rpm (18 Oct 2026, after driving it): a shift at 6,500 rpm lands near 4,460 (1st to 2nd), 5,200 (2nd to 3rd) and 5,100 (3rd to 4th). The stock-like 3.65 / 1.60 gave a dead 1st to 2nd shift (about 2,900 rpm) and a 2nd to 3rd that dropped the revs only 12 percent, which felt like anti-lag. 1st tops out near 72 km/h, 2nd 104, 3rd 130 at 6,500 rpm |
 | Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 68 bhp (51 kW) at 6,000 rpm, 86 Nm at 5,250, 6,800 limiter (v10: weak below about 4,500 rpm, on cam from 5,000, in his words 5,000 rpm is where things start to happen) |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
