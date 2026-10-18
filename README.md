@@ -33,7 +33,7 @@ Manager.
 
 | Area | Change |
 |---|---|
-| Gearbox | 4-speed, Ford Type E ratios 3.65 / 1.97 / 1.37 / 1.00, final 3.92, open diff |
+| Gearbox | 4-speed, 3.65 / 1.75 / 1.30 / 1.00, final 3.92, open diff (2nd and 3rd lengthened after driving it, 18 Oct 2026) |
 | Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 114 bhp at 5,750 rpm, 156 Nm at 4,250, 6,800 limiter |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
