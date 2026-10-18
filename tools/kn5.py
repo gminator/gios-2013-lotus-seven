@@ -25,16 +25,21 @@ def parse(path):
             tn=r.s(); slot=r.i(); texname=r.s(); m['tex'][tn]=texname
         materials.append(m)
     meshes=[]
-    def node(depth, parent):
+    import numpy as _np
+    def node(depth, parent, pm=None):
+        if pm is None: pm=_np.eye(4)
+        nstart=r.p
         t=r.i(); name=r.s(); nch=r.i(); act=r.by()
+        wm=pm
         if t==1:
-            r.raw(64)
+            m=_np.array(struct.unpack_from('<16f',r.b,r.p)).reshape(4,4); r.raw(64)
+            wm=m@pm
         elif t==2:
             r.by(); r.by(); r.by()
             nv=r.i(); voff=r.p; r.raw(nv*44)
             ni=r.i(); ioff=r.p; r.raw(ni*2)
             mat=r.i(); layer=r.i(); r.f(); r.f(); r.raw(16); r.by()
-            meshes.append(dict(name=name,parent=parent,nv=nv,voff=voff,ni=ni,ioff=ioff,mat=mat))
+            meshes.append(dict(name=name,parent=parent,nv=nv,voff=voff,ni=ni,ioff=ioff,mat=mat,world=wm,nstart=nstart,nend=r.p,nch=nch))
         elif t==3:
             r.by(); r.by(); r.by()
             for _ in range(r.i()): r.s(); r.raw(64)
@@ -42,7 +47,7 @@ def parse(path):
             ni=r.i(); ioff=r.p; r.raw(ni*2)
             mat=r.i(); layer=r.i(); r.f(); r.f()
             meshes.append(dict(name=name,parent=parent,nv=nv,voff=voff,ni=ni,ioff=ioff,mat=mat,skinned=True))
-        for _ in range(nch): node(depth+1,name)
+        for _ in range(nch): node(depth+1,name,wm)
     node(0,None)
     return b,ver,textures,materials,meshes
 if __name__=='__main__':

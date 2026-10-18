@@ -58,6 +58,21 @@ def main():
     sys.path.insert(0, os.path.join(HERE, 'tools'))
     import kn5_patch_tex  # noqa: runs on import with argv, so call its function instead
     kn5_patch_tex.patch(CAR + '.kn5', CAR + '.kn5', {'dashboard.dds': os.path.join(ov, 'kn5_textures', 'dashboard.dds')})
+    # wooden dash and parcel tray, black headlamp housings, polished screen frame: new materials written into the model
+    from kn5_mod import Kn5Mod
+    k = Kn5Mod(CAR + '.kn5')
+    ext = os.path.join(ov, 'extension')
+    k.add_texture('gio_wood.dds', os.path.join(ext, 'dash_wood.dds'))
+    k.add_texture('gio_black.dds', os.path.join(ext, 'black_matte.dds'))
+    k.add_texture('gio_alu.dds', os.path.join(ext, 'alu_polished.dds'))
+    base = {'ksEmissive': 0, 'ksAlphaRef': 0}
+    k.add_material('gio_wood', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.6, ksSpecular=0.3, ksSpecularEXP=40, **base), {'txDiffuse': 'gio_wood.dds'})
+    k.add_material('gio_lamp_black', 'ksPerPixel', dict(ksAmbient=0.4, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=30, **base), {'txDiffuse': 'gio_black.dds'})
+    k.add_material('gio_alu_polished', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.5, ksSpecular=1.2, ksSpecularEXP=60, fresnelC=0.3, fresnelEXP=2, fresnelMaxLevel=0.6, **base), {'txDiffuse': 'gio_alu.dds'})
+    for m in ['dashboard_lp_SUB0', 'dashboard001_SUB0', 'boot_cover']: k.set_mesh_material(m, 'gio_wood')
+    for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')
+    k.set_mesh_material('parbrise_chassis_SUB0', 'gio_alu_polished')
+    k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
     if os.path.exists(zp): os.remove(zp)
