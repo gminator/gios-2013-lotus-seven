@@ -40,7 +40,7 @@ Manager.
 | Skin | `00_british_racing_green`: BRG with an aluminium bonnet, yellow grille lip, black 7 grille, silver rims, two side vents on the exhaust side, Union Jack and G. ADONIS on the sides, G-SEVEN plates |
 | Exhaust | Remodelled to his: wrapped elbow out of the side panel, long silencer in an expanded-metal guard with three bands, bare tailpipe bending down ahead of the rear wheel (`tools/exhaust_geom.py`, written into the kn5 by the build) |
 | Seats | "LOTUS 7" in orange stitching on both headrests (`tools/seats.py`: the headrest fronts get their own texture patch) |
-| Dash and trim | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash and wooden rear parcel tray, polished screen frame and black headlight housings via CSP `extension/ext_config.ini` |
+| Dash and trim | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash, body-colour rear deck with a wooden luggage rack on chrome rails (`tools/rack_geom.py`), polished screen frame and black headlight housings, all as materials and meshes written into the kn5 |
 
 ## The engine, so far an estimate
 
@@ -69,10 +69,10 @@ ratios, the tyre size, and the compression ratio.
 - `overlay/ui/ui_car.json`: name, description, specs and curves
 - `overlay/skins/00_british_racing_green/`: the livery
 - `overlay/extension/`: wood and flat-normal textures plus the CSP section appended to the mod's `ext_config.ini`
-- `overlay/kn5_textures/dashboard.dds`: the redrawn dial atlas, patched into the model by the build
+- `overlay/kn5_textures/`: the redrawn dial atlas, exhaust, seat and rack textures, patched into the model by the build
 - `dyno/`: engine curves, estimated now, measured later
 - `photos/`: the real car
-- `tools/`: kn5 parser, texture extract and patch, UV mapper, `data.acd` unpacker, engine curve model, dial redraw.
+- `tools/`: kn5 parser and rewriter (textures, materials, meshes), texture extract, UV mapper, `data.acd` unpacker, engine curve model, dial redraw, livery painter, exhaust and rack geometry, seat stitching, Blender check renders, track-day charts.
   Those that draw or convert textures need `pip install pillow numpy`; the build itself does not.
 
 ## Credits
