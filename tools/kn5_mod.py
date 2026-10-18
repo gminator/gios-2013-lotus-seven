@@ -187,3 +187,21 @@ def hide_uv_region(self, material_name, u0, u1, vimg0, vimg1):
         self.replace_mesh(x['name'], V2, newtri.reshape(-1).astype(_np.uint16))
         print(f"hid {hit.sum()} triangles on {x['name']}")
 Kn5Mod.hide_uv_region = hide_uv_region
+
+def hide_where(self, material_name, pred):
+    """Collapse triangles of meshes using `material_name` whose world-space centroid satisfies pred(x, y, z)."""
+    import struct
+    for x in self.X:
+        if self.M[x['mat']]['name'] != material_name or x.get('skinned'): continue
+        V = _np.array([struct.unpack_from('<11f', self.b, x['voff'] + i * 44) for i in range(x['nv'])], dtype=_np.float32)
+        I = _np.frombuffer(self.b, dtype='<u2', count=x['ni'], offset=x['ioff']).copy(); tri = I.reshape(-1, 3)
+        P = _np.c_[V[:, :3], _np.ones(len(V))] @ x['world']; C = P[tri, :3].mean(axis=1)
+        hit = _np.array([pred(*c) for c in C])
+        if not hit.any(): continue
+        extra = []; newtri = tri.copy()
+        for k in _np.where(hit)[0]:
+            for j in range(3):
+                nv = V[tri[k, j]].copy(); nv[:3] = V[tri[k, 0], :3]; extra.append(nv); newtri[k, j] = len(V) + len(extra) - 1
+        self.replace_mesh(x['name'], _np.vstack([V, _np.array(extra, dtype=_np.float32)]), newtri.reshape(-1).astype(_np.uint16))
+        print(f"hid {hit.sum()} of {len(tri)} triangles on {x['name']}")
+Kn5Mod.hide_where = hide_where
