@@ -63,6 +63,10 @@ ratios, the tyre size, and the compression ratio.
 
 ![Lap times](trackday/2026-10-14/laptimes.png)
 
+## Sim sessions
+
+- [Killarney in the twin, 18 October 2026](trackday/sim-2026-10-18/driving-report.pdf): a one-page report each on downshifts, coasting, steering and gear use, from the recorded telemetry (`tools/sim_report.py`).
+
 ## Layout
 
 - `overlay/data/`: the 7 physics files that changed (engine, power curve, drivetrain, car, suspension, setup, AI)
