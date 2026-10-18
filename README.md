@@ -7,21 +7,27 @@ A 2013 Birkin S3 Lotus Seven replica, British Racing Green with a yellow nose: F
 plated G-SEVEN in the sim. This repo is its twin for Assetto Corsa, built as a re-tune of Ben O'Bro and
 JackCY's **Caterham Super7 1700 Super Sprint RHD** mod (v1.52, physics 2.9) from RaceDepartment.
 
-Only what was changed or added lives here. The original mod's model, sounds and textures are not redistributed,
-as its authors ask; `build.py` assembles the full car from their 7z.
+The source tree holds only what was changed or added; `build.py` assembles the full car from the original mod's 7z,
+and the releases carry the built zip.
 
 | | |
 |---|---|
 | ![Chapman's Peak](photos/chapmans-peak.jpg) | ![Sea Point at sunset](photos/cockpit-sea-point.jpg) |
 
-## Build and install
+## Download
+
+The built car is attached to the [latest release](https://github.com/gminator/gios-2013-lotus-seven/releases/latest):
+download `bo_birkin_s3_1700_kent.zip` and drag it into Content Manager. It installs as its own car and leaves the
+stock Caterham alone. That zip contains the base mod's model, sounds and textures by Ben O'Bro and JackCY.
+
+## Build it yourself
 
 ```
 python3 build.py ~/Downloads/bo_caterham_1700-v1.52.7z
 ```
 
 Python 3 and `bsdtar` (on macOS by default). Output: `build/bo_birkin_s3_1700_kent/` and a zip to drag into Content
-Manager. It installs as its own car and leaves the stock Caterham alone.
+Manager.
 
 ## What is different from the stock mod
 
