@@ -18,7 +18,7 @@ def remap(b, x, patch):
     u = V[:, 6].copy(); vimg = 1.0 + V[:, 7]
     V[:, 6] = (u + UOFF) / SCALE; V[:, 7] = (vimg + VOFF) / SCALE - 1.0
     P = np.c_[V[:, :3], np.ones(len(V))] @ x['world']; Nw = V[:, 3:6] @ x['world'][:3, :3]
-    front = (P[:, 1] > 0.42) & (P[:, 1] < 0.70) & (Nw[:, 2] > 0.30)          # upper seat back, the forward-facing part below the shoulders
+    front = (P[:, 1] > 0.34) & (P[:, 1] < 0.62) & (Nw[:, 2] > 0.30)          # upper seat back, the forward-facing part below the shoulders
     tri = I.reshape(-1, 3); ftri = front[tri].all(axis=1)
     fv = np.unique(tri[ftri])
     xmin, xmax = P[fv, 0].min(), P[fv, 0].max(); ymin, ymax = P[fv, 1].min(), P[fv, 1].max()
@@ -56,7 +56,7 @@ def make_textures(suede_png, suede_nrm_png, out_dds, out_nrm_dds, check_png=None
     for (x0, y0, x1, y1) in SEATS.values():
         w, h = x1 - x0, y1 - y0
         canvas = tex.crop((x0, y0, x1, y1)); d = ImageDraw.Draw(canvas)
-        big = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Black.ttf', int(h * 0.34))
+        big = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Black.ttf', int(h * 0.40))
         small = ImageFont.truetype('/System/Library/Fonts/Supplemental/Arial Black.ttf', int(h * 0.26))
         _stitched(d, canvas, 'LOTUS', big, w / 2, h * 0.28)
         _stitched(d, canvas, '7', small, w / 2, h * 0.64)

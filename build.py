@@ -103,6 +103,12 @@ def main():
     k.add_texture('gio_rack.dds', os.path.join(ov, 'kn5_textures', 'gio_rack.dds'))
     k.add_material('gio_rack', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.55, ksSpecular=0.6, ksSpecularEXP=40, ksEmissive=0, ksAlphaRef=0), {'txDiffuse': 'gio_rack.dds'})
     k.replace_mesh('exhaust_attach', RV, RI, material='gio_rack')
+    # bonnet: bare polished aluminium, almost chrome. Own material with the skin's bonnet colour as diffuse and the mod's maps for shading
+    k.add_texture('gio_body_skin.dds', os.path.join(ov, 'skins', '00_british_racing_green', 'body_metal_detail.dds'))
+    k.add_material('gio_alu_bonnet', 'ksPerPixelMultiMap', dict(ksAmbient=0.45, ksDiffuse=0.35, ksSpecular=2.2, ksSpecularEXP=160, ksEmissive=0, ksAlphaRef=0,
+                   fresnelC=0.75, fresnelEXP=1.5, fresnelMaxLevel=0.95, useDetail=0, detailUVMultiplier=1, sunSpecular=40, sunSpecularEXP=3000),
+                   {'txDiffuse': 'gio_body_skin.dds', 'txNormal': 'empty_nrm.dds', 'txMaps': 'body_base_map.dds', 'txDetail': 'NULL.dds'})
+    k.set_mesh_material('capot new', 'gio_alu_bonnet')
     # seats: LOTUS over 7 stitched on the seat backs (own texture patch per seat)
     import seats
     seats.apply(k, _b, _X, ov)
