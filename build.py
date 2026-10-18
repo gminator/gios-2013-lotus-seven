@@ -85,8 +85,13 @@ def main():
     Pw = np.c_[BV0[:, :3], np.ones(len(BV0))] @ bc['world']
     def _deck_top(z):   # measured tub rim: 0.722 up to the roll bar, then falling to 0.674 at the rear panel
         return np.where(z > -1.05, 0.726, 0.726 - (-1.05 - z) * (0.05 / 0.34))
-    # outline: convex hull of the cover's footprint, clipped to the tub
-    pts = np.c_[np.clip(Pw[:, 0], -0.487, 0.487), np.clip(Pw[:, 2], -1.378, -0.885)]
+    # outline: the tub's own lip round the boot opening (body vertices above 0.66 in the boot area), so the deck ends
+    # exactly at the lip and never overhangs; a shallow crown in the middle keeps the lip from poking through
+    bd = [m for m in _X if m['name'] == 'body'][0]
+    BP = np.array([_st.unpack_from('<3f', _b, bd['voff'] + i * 44) for i in range(bd['nv'])])
+    BPw = np.c_[BP, np.ones(len(BP))] @ bd['world']
+    lip = (BPw[:, 1] > 0.66) & (BPw[:, 2] < -0.85) & (BPw[:, 2] > -1.42) & (np.abs(BPw[:, 0]) < 0.5)
+    L = BPw[lip]
     def _hull(P):
         P = sorted(set(map(tuple, np.round(P, 4))))
         def cross(o, a, b): return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
@@ -98,16 +103,17 @@ def main():
             while len(up) >= 2 and cross(up[-2], up[-1], q) <= 0: up.pop()
             up.append(q)
         return lo[:-1] + up[:-1]
-    H = _hull(pts)                                    # counter-clockwise in the (x, z) plane
+    H = _hull(np.c_[L[:, 0], L[:, 2]])
+    def _lip_y(x, z):                                  # height of the nearest lip vertex
+        d = (L[:, 0] - x) ** 2 + (L[:, 2] - z) ** 2; return float(L[np.argmin(d), 1])
     cx, cz = float(np.mean([h[0] for h in H])), float(np.mean([h[1] for h in H]))
     _n = np.array([0.0, 1.0, -0.02]); _n /= np.linalg.norm(_n)
-    ring = [(x, float(_deck_top(np.array(z))) - 0.008, z) for x, z in H]      # 8 mm under the rim line so the rim's lip covers the join
-    verts = [(cx, float(_deck_top(np.array(cz))) - 0.008, cz)] + ring
+    ring = [(x, _lip_y(x, z) + 0.003, z) for x, z in H]
+    verts = [(cx, 0.727, cz)] + ring
     BV = np.array([[x, y, z, *_n, 0.5, -0.5, 1, 0, 0] for x, y, z in verts], dtype=np.float32)
     tri = []
     for i in range(len(ring)):
-        a, b = 1 + i, 1 + (i + 1) % len(ring)
-        tri += [0, a, b]                              # fan; flipped below if it faces down
+        a, b2 = 1 + i, 1 + (i + 1) % len(ring); tri += [0, a, b2]
     BI = np.array(tri, dtype=np.int64)
     P3 = BV[:, :3][BI.reshape(-1, 3)]; nrm = np.cross(P3[:, 1] - P3[:, 0], P3[:, 2] - P3[:, 0])
     if nrm[:, 1].mean() < 0: BI = BI.reshape(-1, 3)[:, [0, 2, 1]].reshape(-1)
