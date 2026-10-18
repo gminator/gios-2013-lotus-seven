@@ -73,7 +73,7 @@ def main():
     k.add_texture('gio_alu.dds', os.path.join(ext, 'alu_polished.dds'))
     k.add_texture('gio_brg.dds', os.path.join(ext, 'brg_paint.dds'))
     base = {'ksEmissive': 0, 'ksAlphaRef': 0}
-    k.add_material('gio_wood', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.6, ksSpecular=0.3, ksSpecularEXP=40, **base), {'txDiffuse': 'gio_wood.dds'})
+    k.add_material('gio_wood', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.6, ksSpecular=0.6, ksSpecularEXP=70, **base), {'txDiffuse': 'gio_wood.dds'})   # satin varnish
     k.add_material('gio_lamp_black', 'ksPerPixel', dict(ksAmbient=0.4, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=30, **base), {'txDiffuse': 'gio_black.dds'})
     k.add_material('gio_alu_polished', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.5, ksSpecular=1.2, ksSpecularEXP=60, fresnelC=0.3, fresnelEXP=2, fresnelMaxLevel=0.6, **base), {'txDiffuse': 'gio_alu.dds'})
     k.add_material('gio_brg_paint', 'ksPerPixelReflection', dict(ksAmbient=0.45, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=120, fresnelC=0.3, fresnelEXP=3, fresnelMaxLevel=0.12, **base), {'txDiffuse': 'gio_brg.dds'})
@@ -90,7 +90,10 @@ def main():
     Nw = BV[:, 3:6] @ bc['world'][:3, :3]; tri = BI.reshape(-1, 3)
     keep = Nw[tri, 1].mean(axis=1) > 0.6                   # drop the cover's rolled edge (side-facing faces); keep the top surface
     BI = tri[keep].reshape(-1).astype(np.uint16)
-    k.replace_mesh('boot_cover', BV, BI, material='gio_brg_paint')
+    # a flat green floor just under the deck so the roll-bar cut-outs show paint, not the dark boot
+    FV, FI = _rg._box((0.0, 0.652, -1.14), (0.96, 0.008, 0.52), 1)
+    FVl = exhaust_geom.to_local(FV.astype(np.float32), bc['world'])
+    k.replace_mesh('boot_cover', np.vstack([BV, FVl]), np.concatenate([BI, (FI + len(BV)).astype(np.uint16)]), material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
     k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
     for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')

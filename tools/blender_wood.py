@@ -7,16 +7,16 @@ bpy.ops.mesh.primitive_plane_add(size=2); plane = bpy.context.object
 mat = bpy.data.materials.new('wood'); mat.use_nodes = True; nt = mat.node_tree; nodes = nt.nodes; links = nt.links
 for n in list(nodes): nodes.remove(n)
 outn = nodes.new('ShaderNodeOutputMaterial'); em = nodes.new('ShaderNodeEmission')
-coord = nodes.new('ShaderNodeTexCoord'); mapn = nodes.new('ShaderNodeMapping'); mapn.inputs['Scale'].default_value = (1.0, 6.0, 1.0)
+coord = nodes.new('ShaderNodeTexCoord'); mapn = nodes.new('ShaderNodeMapping'); mapn.inputs['Scale'].default_value = (1.0, 14.0, 1.0)
 wave = nodes.new('ShaderNodeTexWave'); wave.wave_type = 'BANDS'; wave.bands_direction = 'Y'
-wave.inputs['Scale'].default_value = 2.2; wave.inputs['Distortion'].default_value = 16.0; wave.inputs['Detail'].default_value = 14.0; wave.inputs['Detail Scale'].default_value = 1.2; wave.inputs['Detail Roughness'].default_value = 0.75
-noise = nodes.new('ShaderNodeTexNoise'); noise.inputs['Scale'].default_value = 40.0; noise.inputs['Detail'].default_value = 8.0; noise.inputs['Roughness'].default_value = 0.6
-mix = nodes.new('ShaderNodeMix'); mix.data_type = 'FLOAT'; mix.inputs['Factor'].default_value = 0.28
+wave.inputs['Scale'].default_value = 9.0; wave.inputs['Distortion'].default_value = 5.0; wave.inputs['Detail'].default_value = 16.0; wave.inputs['Detail Scale'].default_value = 2.5; wave.inputs['Detail Roughness'].default_value = 0.8
+noise = nodes.new('ShaderNodeTexNoise'); noise.inputs['Scale'].default_value = 120.0; noise.inputs['Detail'].default_value = 8.0; noise.inputs['Roughness'].default_value = 0.6
+mix = nodes.new('ShaderNodeMix'); mix.data_type = 'FLOAT'; mix.inputs['Factor'].default_value = 0.35
 ramp = nodes.new('ShaderNodeValToRGB'); cr = ramp.color_ramp
-cr.elements[0].position = 0.0; cr.elements[0].color = (0.16, 0.07, 0.03, 1)
-cr.elements[1].position = 1.0; cr.elements[1].color = (0.50, 0.26, 0.11, 1)
-e = cr.elements.new(0.45); e.color = (0.30, 0.14, 0.06, 1)
-e2 = cr.elements.new(0.75); e2.color = (0.42, 0.21, 0.09, 1)
+cr.elements[0].position = 0.0; cr.elements[0].color = (0.20, 0.09, 0.04, 1)
+cr.elements[1].position = 1.0; cr.elements[1].color = (0.40, 0.20, 0.09, 1)
+e = cr.elements.new(0.45); e.color = (0.28, 0.13, 0.06, 1)
+e2 = cr.elements.new(0.75); e2.color = (0.35, 0.17, 0.08, 1)
 links.new(coord.outputs['UV'], mapn.inputs['Vector']); links.new(mapn.outputs['Vector'], wave.inputs['Vector']); links.new(mapn.outputs['Vector'], noise.inputs['Vector'])
 links.new(wave.outputs['Fac'], mix.inputs['A']); links.new(noise.outputs['Fac'], mix.inputs['B']); links.new(mix.outputs['Result'], ramp.inputs['Fac'])
 links.new(ramp.outputs['Color'], em.inputs['Color']); links.new(em.outputs['Emission'], outn.inputs['Surface'])
