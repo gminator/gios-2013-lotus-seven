@@ -101,8 +101,8 @@ def main():
     H = _hull(pts)                                    # counter-clockwise in the (x, z) plane
     cx, cz = float(np.mean([h[0] for h in H])), float(np.mean([h[1] for h in H]))
     _n = np.array([0.0, 1.0, -0.02]); _n /= np.linalg.norm(_n)
-    ring = [(x, float(_deck_top(np.array(z))) + 0.004, z) for x, z in H]
-    verts = [(cx, float(_deck_top(np.array(cz))) + 0.004, cz)] + ring
+    ring = [(x, float(_deck_top(np.array(z))) - 0.008, z) for x, z in H]      # 8 mm under the rim line so the rim's lip covers the join
+    verts = [(cx, float(_deck_top(np.array(cz))) - 0.008, cz)] + ring
     BV = np.array([[x, y, z, *_n, 0.5, -0.5, 1, 0, 0] for x, y, z in verts], dtype=np.float32)
     tri = []
     for i in range(len(ring)):
