@@ -84,8 +84,12 @@ def main():
     bc = [m for m in _X if m['name'] == 'boot_cover'][0]
     BV = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
     BI = np.frombuffer(_b, dtype='<u2', count=bc['ni'], offset=bc['ioff']).copy()
-    Rinv = np.linalg.inv(bc['world'][:3, :3])
-    BV[:, 3:6] = (np.array([0.0, 1.0, 0.0]) @ Rinv).astype(np.float32)
+    Rinv = np.linalg.inv(bc['world'][:3, :3]); R = bc['world'][:3, :3]; t = bc['world'][3, :3]
+    import sheet_smooth
+    Pw = BV[:, :3] @ R + t; Nw = BV[:, 3:6] @ R
+    Pn, Nn, _free, _n = sheet_smooth.smooth_sheet(Pw, Nw, BI)
+    BV[:, :3] = ((Pn - t) @ Rinv).astype(np.float32)
+    BV[:, 3:6] = (Nn @ Rinv).astype(np.float32)
     BV[:, 8:11] = (np.array([1.0, 0.0, 0.0]) @ Rinv).astype(np.float32)
     k.replace_mesh('boot_cover', BV, BI, material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
