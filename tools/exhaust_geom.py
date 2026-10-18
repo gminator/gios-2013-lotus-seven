@@ -22,7 +22,7 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
         bn = np.cross(tans[i], normals[i])
         for k in range(segs + 1):            # +1: duplicate seam vertex so UVs do not wrap
             a = 2 * math.pi * k / segs; nrm = normals[i] * math.cos(a) + bn * math.sin(a)
-            V.append([*(p + nrm * radius), *nrm, s / L * u_scale, -((row + 0.08 + (k / segs) * 0.84) / 4), 0, 0, 0])
+            V.append([*(p + nrm * radius), *nrm, s / L * u_scale, (row + 0.08 + (k / segs) * 0.84) / 4 - 1.0, 0, 0, 0])   # image_y = 1 + v
     w = segs + 1
     for i in range(len(pts) - 1):
         for k in range(segs):
@@ -30,7 +30,7 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
             I += [a, c, b, a, d, c]      # counter-clockwise seen from outside (right-hand rule gives the outward normal)
     if caps:
         for ring, tn in ((0, -tans[0]), (len(pts) - 1, tans[-1])):
-            c = len(V); V.append([*pts[ring], *tn, 0.5, -(3.5 / 4), 0, 0, 0])
+            c = len(V); V.append([*pts[ring], *tn, 0.5, 3.5 / 4 - 1.0, 0, 0, 0])
             for k in range(segs):
                 a, b = ring * w + k, ring * w + k + 1
                 I += ([c, b, a] if ring == 0 else [c, a, b])

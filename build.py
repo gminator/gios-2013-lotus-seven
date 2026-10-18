@@ -57,9 +57,14 @@ def main():
     # dash dials (white faces, km/h) patched into the main model
     sys.path.insert(0, os.path.join(HERE, 'tools'))
     import kn5_patch_tex  # noqa: runs on import with argv, so call its function instead
-    kn5_patch_tex.patch(CAR + '.kn5', CAR + '.kn5', {'dashboard.dds': os.path.join(ov, 'kn5_textures', 'dashboard.dds')})
-    # wooden dash and parcel tray, black headlamp housings, polished screen frame: new materials written into the model
+    kn5_patch_tex.patch(CAR + '.kn5', CAR + '.kn5', {'dashboard.dds': os.path.join(ov, 'kn5_textures', 'dashboard.dds'),
+                                                     'tex_misc.dds': os.path.join(ov, 'kn5_textures', 'tex_misc.dds'),          # Lotus 7 seat patch and badges instead of Caterham
+                                                     'body_base_map.dds': os.path.join(ov, 'kn5_textures', 'body_base_map.dds')})  # the mod's painted side port removed
+    # wooden dash, black headlamp housings, polished screen frame, deck, exhaust, rack: new materials and meshes written into the model
     from kn5_mod import Kn5Mod
+    import numpy as np, exhaust_geom
+    from kn5 import parse as _parse
+    _b, _v, _T, _M, _X = _parse(CAR + '.kn5')
     k = Kn5Mod(CAR + '.kn5')
     ext = os.path.join(ov, 'extension')
     k.add_texture('gio_wood.dds', os.path.join(ext, 'dash_wood.dds'))
@@ -70,15 +75,19 @@ def main():
     k.add_material('gio_wood', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.6, ksSpecular=0.3, ksSpecularEXP=40, **base), {'txDiffuse': 'gio_wood.dds'})
     k.add_material('gio_lamp_black', 'ksPerPixel', dict(ksAmbient=0.4, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=30, **base), {'txDiffuse': 'gio_black.dds'})
     k.add_material('gio_alu_polished', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.5, ksSpecular=1.2, ksSpecularEXP=60, fresnelC=0.3, fresnelEXP=2, fresnelMaxLevel=0.6, **base), {'txDiffuse': 'gio_alu.dds'})
-    k.add_material('gio_brg_paint', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.55, ksSpecular=0.7, ksSpecularEXP=100, fresnelC=0.5, fresnelEXP=2, fresnelMaxLevel=0.3, **base), {'txDiffuse': 'gio_brg.dds'})
+    k.add_material('gio_brg_paint', 'ksPerPixelReflection', dict(ksAmbient=0.45, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=120, fresnelC=0.3, fresnelEXP=3, fresnelMaxLevel=0.12, **base), {'txDiffuse': 'gio_brg.dds'})
     for m in ['dashboard_lp_SUB0', 'dashboard001_SUB0']: k.set_mesh_material(m, 'gio_wood')
-    k.set_mesh_material('boot_cover', 'gio_brg_paint')     # the rear deck is body colour; the wood is a rack on top of it
+    # the rear deck: a flat body-colour panel instead of the canvas tonneau, press studs hidden
+    import rack_geom as _rg
+    bc = [m for m in _X if m['name'] == 'boot_cover'][0]
+    DV, DI = _rg._box((0.0, 0.70, -1.14), (0.94, 0.012, 0.50), 1)
+    k.replace_mesh('boot_cover', exhaust_geom.to_local(DV.astype(np.float32), bc['world']), DI.astype(np.uint16), material='gio_brg_paint')
+    bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
+    k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
     for m in ['mainlight', 'mainlight01']: k.set_mesh_material(m, 'gio_lamp_black')
     k.set_mesh_material('parbrise_chassis_SUB0', 'gio_alu_polished')
     # his side exhaust: elbow out of the panel, long silencer in a mesh guard, tailpipe bending down ahead of the rear wheel
-    import numpy as np, exhaust_geom
-    from kn5 import parse as _parse
-    _b, _v, _T, _M, _X = _parse(CAR + '.kn5'); ex = [m for m in _X if m['name'] == 'exhaust'][0]
+    ex = [m for m in _X if m['name'] == 'exhaust'][0]
     V, I = exhaust_geom.build(); V = exhaust_geom.to_local(V, ex['world'])
     k.add_texture('gio_exhaust.dds', os.path.join(ov, 'kn5_textures', 'gio_exhaust.dds'))
     k.add_material('gio_exhaust', 'ksPerPixel', dict(ksAmbient=0.45, ksDiffuse=0.55, ksSpecular=0.9, ksSpecularEXP=35, ksEmissive=0, ksAlphaRef=0), {'txDiffuse': 'gio_exhaust.dds'})
@@ -90,9 +99,6 @@ def main():
     k.add_texture('gio_rack.dds', os.path.join(ov, 'kn5_textures', 'gio_rack.dds'))
     k.add_material('gio_rack', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.55, ksSpecular=0.6, ksSpecularEXP=40, ksEmissive=0, ksAlphaRef=0), {'txDiffuse': 'gio_rack.dds'})
     k.replace_mesh('exhaust_attach', RV, RI, material='gio_rack')
-    # seats: 'LOTUS 7' stitched on the headrests (own texture patch per seat)
-    import seats
-    seats.apply(k, _b, _X, ov)
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')

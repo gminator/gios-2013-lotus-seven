@@ -18,12 +18,17 @@ def aluminium():
     return alu.filter(ImageFilter.GaussianBlur(0.6))
 
 def chrome_vent():
-    w, h = int(40 * sc), int(20 * sc); im = Image.new('RGBA', (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
-    d.rectangle([0, 0, w - 1, h - 1], fill=(205, 208, 212, 255), outline=(120, 120, 125, 255), width=3)
+    """raised chrome louvre vent, 3 slots, about 0.19 x 0.09 m, with a bevelled frame"""
+    w, h = int(56 * sc), int(28 * sc); im = Image.new('RGBA', (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, w - 1, h - 1], fill=(60, 60, 62, 255))                      # shadow under the raised frame
+    d.rectangle([2, 0, w - 1, h - 3], fill=(215, 218, 222, 255))                    # frame top, lit
+    d.rectangle([6, 4, w - 5, h - 7], fill=(165, 168, 172, 255))                    # frame inner bevel
+    sw = (w - 18) / 3
     for i in range(3):
-        sx = 6 + i * (w - 12) / 3
-        d.rectangle([sx + 3, 5, sx + (w - 12) / 3 - 3, h - 5], fill=(40, 40, 42, 255))
-        d.rectangle([sx + 3, 5, sx + (w - 12) / 3 - 3, 9], fill=(150, 152, 156, 255))
+        sx = 9 + i * sw
+        d.rectangle([sx + 2, 7, sx + sw - 2, h - 10], fill=(28, 28, 30, 255))      # dark opening
+        d.rectangle([sx + 2, 7, sx + sw - 2, 11], fill=(120, 122, 126, 255))        # louvre lip catching light
+        d.rectangle([sx + 2, h - 14, sx + sw - 2, h - 10], fill=(8, 8, 8, 255))
     return im
 
 def crossed_flags():
@@ -66,12 +71,13 @@ def paint(mask_png, out_dds, check_png=None, base_map_png=None):
     # positions in 1024-px texture coordinates, from the body mesh's UV fit: vent high on the panel at the front,
     # flags under the scuttle, name low-mid behind the door, exhaust hole where the elbow pierces the left panel
     # bottom strip (left side of the car): upright, tilted to follow the panel
+    # bottom strip = right side of the car (the game reads v from the bottom); no exhaust there
     place(out, vent, 723, 670, TILT); place(out, flags, 478, 735, TILT); place(out, name, 415, 770, TILT)
-    d = ImageDraw.Draw(out); hx, hy, hr = 739 * sc, 716 * sc, 15 * sc
+    # top strip = left side, laid out rotated 180 degrees: exhaust hole where the elbow pierces the panel
+    place(out, vent, 723, 1024 - 670, 180 - TILT); place(out, flags, 478, 1024 - 735, 180 - TILT); place(out, name, 415, 1024 - 770, 180 - TILT)
+    d = ImageDraw.Draw(out); hx, hy, hr = 739 * sc, (1024 - 716) * sc, 15 * sc
     d.ellipse([hx - hr - 4, hy - hr - 4, hx + hr + 4, hy + hr + 4], fill=(90, 92, 94))      # rolled edge of the cut-out
     d.ellipse([hx - hr, hy - hr, hx + hr, hy + hr], fill=(8, 8, 8))                        # the hole
-    # top strip (right side): the panel is laid out rotated 180 degrees; no exhaust hole there
-    place(out, vent, 723, 1024 - 670, 180 - TILT); place(out, flags, 478, 1024 - 735, 180 - TILT); place(out, name, 415, 1024 - 770, 180 - TILT)
     out.convert('RGBA').save(out_dds, pixel_format='DXT5')
     if check_png and base_map_png:
         base = Image.open(base_map_png).convert('RGB').resize((S, S))
