@@ -129,13 +129,11 @@ def main():
     import struct as _st2
     for m in ['mirror', 'MIRROR_C']:
         k.translate_mesh(m, 0.0, -0.168, 0.07)
-    mm = [m for m in _X if m['name'] == 'mirror002'][0]
-    MV = np.array([_st2.unpack_from('<11f', _b, mm['voff'] + i * 44) for i in range(mm['nv'])], dtype=np.float32)
-    MI = np.frombuffer(_b, dtype='<u2', count=mm['ni'], offset=mm['ioff']).copy()
-    MV[:, :3] += (np.array([0.0, -0.168, 0.07]) @ np.linalg.inv(mm['world'][:3, :3])).astype(np.float32)
+    k.translate_mesh('mirror002', 0.0, -0.168, 0.07)
+    # the wooden block it stands on, on the green scuttle top (replaces the mod's chrome base plate, Object008)
+    ob = [m for m in _X if m['name'] == 'Object008'][0]
     BV, BI = _rg._box((0.0, 0.755, -0.02), (0.045, 0.05, 0.035), 3)
-    BVl = exhaust_geom.to_local(BV.astype(np.float32), mm['world'])
-    k.replace_mesh('mirror002', np.vstack([MV, BVl]), np.concatenate([MI, (BI + len(MV)).astype(np.uint16)]))
+    k.replace_mesh('Object008', exhaust_geom.to_local(BV.astype(np.float32), ob['world']), BI.astype(np.uint16), material='gio_wood')
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
