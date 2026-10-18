@@ -36,7 +36,7 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
                 I += ([c, a, b] if ring == 0 else [c, b, a])
     return np.array(V, np.float32), np.array(I, np.int64)
 
-def build(Y=0.17, z_front=0.68, z_rear=-0.45, x_front=0.47, x_rear=0.565, y_hole=0.30, z_hole=0.78, x_panel=0.385):
+def build(Y=0.155, z_front=0.62, z_rear=-0.45, x_front=0.475, x_rear=0.565, y_hole=0.25, z_hole=0.72, x_panel=0.39):
     """Silencer axis follows the tapering body side (x_front at z_front, x_rear at z_rear). The elbow leaves the flat side
     panel at (x_panel, y_hole, z_hole), comes out into the open and curves down into the top of the silencer's front end."""
     parts = []

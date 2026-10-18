@@ -59,7 +59,8 @@ def main():
     import kn5_patch_tex  # noqa: runs on import with argv, so call its function instead
     kn5_patch_tex.patch(CAR + '.kn5', CAR + '.kn5', {'dashboard.dds': os.path.join(ov, 'kn5_textures', 'dashboard.dds'),
                                                      'tex_misc.dds': os.path.join(ov, 'kn5_textures', 'tex_misc.dds'),
-                                                     'body.dds': os.path.join(ov, 'kn5_textures', 'body.dds')})                 # the mod's painted exhaust port removed          # SQP harness pads, Lotus 7 wheel badges
+                                                     'body.dds': os.path.join(ov, 'kn5_textures', 'body.dds'),                   # the mod's painted exhaust port removed
+                                                     'body_base_map.dds': os.path.join(ov, 'kn5_textures', 'body_base_map.dds')})  # and from its shading map          # SQP harness pads, Lotus 7 wheel badges
     # wooden dash, black headlamp housings, polished screen frame, deck, exhaust, rack: new materials and meshes written into the model
     from kn5_mod import Kn5Mod
     import numpy as np, exhaust_geom
