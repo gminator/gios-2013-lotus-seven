@@ -18,7 +18,7 @@ def remap(b, x, patch):
     u = V[:, 6].copy(); vimg = 1.0 + V[:, 7]
     V[:, 6] = (u + UOFF) / SCALE; V[:, 7] = (vimg + VOFF) / SCALE - 1.0
     P = np.c_[V[:, :3], np.ones(len(V))] @ x['world']; Nw = V[:, 3:6] @ x['world'][:3, :3]
-    front = (P[:, 1] > 0.50) & (P[:, 1] < 0.79) & (Nw[:, 2] > 0.45)          # seat back front, below the headrest
+    front = (P[:, 1] > 0.40) & (P[:, 1] < 0.66) & (Nw[:, 2] > 0.30)          # upper seat back, the forward-facing part below the shoulders
     tri = I.reshape(-1, 3); ftri = front[tri].all(axis=1)
     fv = np.unique(tri[ftri])
     xmin, xmax = P[fv, 0].min(), P[fv, 0].max(); ymin, ymax = P[fv, 1].min(), P[fv, 1].max()
