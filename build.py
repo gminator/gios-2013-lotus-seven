@@ -78,47 +78,14 @@ def main():
     k.add_material('gio_alu_polished', 'ksPerPixelReflection', dict(ksAmbient=0.5, ksDiffuse=0.5, ksSpecular=1.2, ksSpecularEXP=60, fresnelC=0.3, fresnelEXP=2, fresnelMaxLevel=0.6, **base), {'txDiffuse': 'gio_alu.dds'})
     k.add_material('gio_brg_paint', 'ksPerPixelReflection', dict(ksAmbient=0.45, ksDiffuse=0.5, ksSpecular=0.5, ksSpecularEXP=120, fresnelC=0.3, fresnelEXP=3, fresnelMaxLevel=0.12, **base), {'txDiffuse': 'gio_brg.dds'})
     for m in ['dashboard_lp_SUB0', 'dashboard001_SUB0']: k.set_mesh_material(m, 'gio_wood')
-    # the rear deck: one clean body-colour panel on the measured tub rim, built from the old cover's outline
-    import struct as _st
+    # the rear deck: fill the body's own boot opening (a hole in the body mesh) using its exact edge vertices,
+    # so the panel meets the bodywork with no overhang and no gap
+    import hole_cap
     bc = [m for m in _X if m['name'] == 'boot_cover'][0]
-    BV0 = np.array([_st.unpack_from('<11f', _b, bc['voff'] + i * 44) for i in range(bc['nv'])], dtype=np.float32)
-    Pw = np.c_[BV0[:, :3], np.ones(len(BV0))] @ bc['world']
-    def _deck_top(z):   # measured tub rim: 0.722 up to the roll bar, then falling to 0.674 at the rear panel
-        return np.where(z > -1.05, 0.726, 0.726 - (-1.05 - z) * (0.05 / 0.34))
-    # outline: the tub's own lip round the boot opening (body vertices above 0.66 in the boot area), so the deck ends
-    # exactly at the lip and never overhangs; a shallow crown in the middle keeps the lip from poking through
     bd = [m for m in _X if m['name'] == 'body'][0]
-    BP = np.array([_st.unpack_from('<3f', _b, bd['voff'] + i * 44) for i in range(bd['nv'])])
-    BPw = np.c_[BP, np.ones(len(BP))] @ bd['world']
-    lip = (BPw[:, 1] > 0.66) & (BPw[:, 2] < -0.85) & (BPw[:, 2] > -1.42) & (np.abs(BPw[:, 0]) < 0.5)
-    L = BPw[lip]
-    def _hull(P):
-        P = sorted(set(map(tuple, np.round(P, 4))))
-        def cross(o, a, b): return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
-        lo, up = [], []
-        for q in P:
-            while len(lo) >= 2 and cross(lo[-2], lo[-1], q) <= 0: lo.pop()
-            lo.append(q)
-        for q in reversed(P):
-            while len(up) >= 2 and cross(up[-2], up[-1], q) <= 0: up.pop()
-            up.append(q)
-        return lo[:-1] + up[:-1]
-    H = _hull(np.c_[L[:, 0], L[:, 2]])
-    def _lip_y(x, z):                                  # height of the nearest lip vertex
-        d = (L[:, 0] - x) ** 2 + (L[:, 2] - z) ** 2; return float(L[np.argmin(d), 1])
-    cx, cz = float(np.mean([h[0] for h in H])), float(np.mean([h[1] for h in H]))
-    _n = np.array([0.0, 1.0, -0.02]); _n /= np.linalg.norm(_n)
-    ring = [(x, _lip_y(x, z) + 0.003, z) for x, z in H]
-    verts = [(cx, 0.727, cz)] + ring
-    BV = np.array([[x, y, z, *_n, 0.5, -0.5, 1, 0, 0] for x, y, z in verts], dtype=np.float32)
-    tri = []
-    for i in range(len(ring)):
-        a, b2 = 1 + i, 1 + (i + 1) % len(ring); tri += [0, a, b2]
-    BI = np.array(tri, dtype=np.int64)
-    P3 = BV[:, :3][BI.reshape(-1, 3)]; nrm = np.cross(P3[:, 1] - P3[:, 0], P3[:, 2] - P3[:, 0])
-    if nrm[:, 1].mean() < 0: BI = BI.reshape(-1, 3)[:, [0, 2, 1]].reshape(-1)
+    BV, BI, _L, _ok, _tot = hole_cap.cap(_b, bd, (0.0, 0.69, -1.19), lift=0.0)
     BV[:, :3] = (BV[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
-    BV[:, 3:6] = (_n @ np.linalg.inv(bc['world'][:3, :3])).astype(np.float32)
+    BV[:, 3:6] = (np.array([0.0, 1.0, 0.0]) @ np.linalg.inv(bc['world'][:3, :3])).astype(np.float32)
     k.replace_mesh('boot_cover', BV, BI.astype(np.uint16), material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
     k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
