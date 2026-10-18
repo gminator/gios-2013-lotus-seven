@@ -85,6 +85,9 @@ def main():
     Pw = np.c_[BV[:, :3], np.ones(len(BV))] @ bc['world']
     Pw[:, 1] = 0.645 + 0.25 * (Pw[:, 1] - 0.645)             # take the dome out of the tonneau: a near-flat deck on the tub's own outline
     BV[:, :3] = (Pw[:, :3] - bc['world'][3, :3]) @ np.linalg.inv(bc['world'][:3, :3])
+    Nw = BV[:, 3:6] @ bc['world'][:3, :3]; tri = BI.reshape(-1, 3)
+    keep = Nw[tri, 1].mean(axis=1) > 0.6                   # drop the cover's rolled edge (side-facing faces); keep the top surface
+    BI = tri[keep].reshape(-1).astype(np.uint16)
     k.replace_mesh('boot_cover', BV, BI, material='gio_brg_paint')
     bp = [m for m in _X if m['name'] == 'button_press_boot'][0]
     k.replace_mesh('button_press_boot', np.zeros((3, 11), dtype=np.float32), np.array([0, 1, 2], dtype=np.uint16))
@@ -114,6 +117,7 @@ def main():
     seats.apply(k, _b, _X, ov)
     # his harness has no cross pad: remove the mod's pad (the narrow label strip of tex_misc) from the belt meshes; the strap tags (big patch) stay
     k.hide_where('tex_misc', lambda x, y, z: 0.56 < y < 0.74 and abs(abs(x) - 0.265) < 0.11 and -1.0 < z < -0.5)   # the harness cross pad lives in the misc-badges mesh, across the seat centre near the top
+    k.hide_where('belt_text', lambda x, y, z: z < -0.65)    # harness tags on and behind the seat backs go; only the two on the shoulder straps in front stay
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')

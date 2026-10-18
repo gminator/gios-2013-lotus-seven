@@ -36,13 +36,16 @@ def _tube(pts, radius, row, segs=20, u_scale=1.0, caps=False):
                 I += ([c, a, b] if ring == 0 else [c, b, a])
     return np.array(V, np.float32), np.array(I, np.int64)
 
-def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81):
-    """X: outer face of the side panel on the exhaust side; Y: silencer centre height; y_hole: where the elbow leaves the panel."""
+def build(X=0.47, Y=0.17, z_front=0.66, z_rear=-0.45, y_hole=0.24, z_hole=0.81, x_panel=0.37):
+    """X: outer face of the side panel at sill height (sets the silencer offset); x_panel: the panel surface where the elbow
+    comes through (the lower panel tapers in towards the nose); Y: silencer centre height; y_hole/z_hole: the elbow exit."""
     parts = []
     xo = X + 0.115
-    parts.append(_tube([(X - 0.03, y_hole, z_hole), (X + 0.03, y_hole, z_hole), (X + 0.085, y_hole - 0.015, z_hole - 0.01), (X + 0.11, y_hole - 0.045, z_hole - 0.05), (xo, Y + 0.01, z_hole - 0.11), (xo, Y, z_front)], 0.034, 1))
-    # rubber grommet where the elbow comes through the side panel: a short black ring flush with the panel, plus a capped plug behind it
-    parts.append(_tube([(X - 0.002, y_hole, z_hole), (X + 0.016, y_hole, z_hole)], 0.054, 3, segs=24, caps=True))
+    # elbow: starts well inside the engine bay, comes out through the grommet, curves back and down into the silencer
+    parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.03, y_hole, z_hole), (x_panel + 0.10, y_hole - 0.01, z_hole - 0.01),
+                        (xo - 0.04, y_hole - 0.04, z_hole - 0.06), (xo, Y + 0.01, z_hole - 0.12), (xo, Y, z_front)], 0.034, 1))
+    # rubber grommet flush with the panel
+    parts.append(_tube([(x_panel - 0.004, y_hole, z_hole), (x_panel + 0.014, y_hole, z_hole)], 0.054, 3, segs=24, caps=True))
     parts.append(_tube([(xo, Y, z_front), (xo, Y, z_rear)], 0.062, 0, caps=True))
     parts.append(_tube([(xo, Y, z_front - 0.02), (xo, Y, z_rear + 0.02)], 0.082, 2, segs=24, u_scale=6.0))
     for z in (z_front - 0.02, z_front - 0.56, z_front - 0.96, z_rear + 0.02):
