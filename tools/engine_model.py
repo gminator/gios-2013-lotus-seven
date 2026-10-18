@@ -1,4 +1,4 @@
-"""v7, 18 Oct 2026 (night): the v6 curve scaled by another 0.92 and a shorter 3rd (1.40), see crank below. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
+"""v8, 18 Oct 2026 (night): 4th shortened to 1.10 (see g4). v7: the v6 curve scaled by another 0.92 and a shorter 3rd (1.40), see crank below. v2: 711M block, gas-flowed head, performance cam, low compression pistons, twin side-draughts.
 Generate power.lut (wheel torque, 13% loss like the original) + ui curves for the Birkin Kent 1700,
 and sanity-check acceleration against the stock Caterham, calibrated on the sim telemetry."""
 import json, math, sys
@@ -24,7 +24,7 @@ ui=json.load(open(f'{car}/ui/ui_car.json'))
 ui.update({
  "name":"Birkin S3 1700 Kent (Giovann)","brand":"Birkin","class":"street","country":"South Africa","year":2013,"version":"1.52-giovann",
  "author":"Ben O'Bro & JackCY (mod); Birkin re-tune for Giovann Adonis",
- "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 70 bhp (52 kW) at 5,400 rpm and 103 Nm at 4,250 rpm at the crank, a peaky cammed Kent that labors below 3,500 rpm and falls away fast past 5,500, 6,800 rpm limiter, gear ratios 3.65 / 1.60 / 1.40 / 1.00 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
+ "description":"A 2013 Birkin S3 Lotus Seven replica, British Racing Green, as it stands in October 2026: Ford Kent crossflow 1600 bored to 1700, low compression pistons, twin side-draught carbs, wrapped exhaust manifolds, 4-speed Ford gearbox, live axle, open differential, right hand drive.<br><br>Re-tuned from the Caterham 1700 Super Sprint RHD mod. Engine: Ford 711M block bored to 1700, gas-flowed head, performance cam, low compression pistons, twin side-draughts. Assumptions (no dyno sheet yet): about 70 bhp (52 kW) at 5,400 rpm and 103 Nm at 4,250 rpm at the crank, a peaky cammed Kent that labors below 3,500 rpm and falls away fast past 5,500, 6,800 rpm limiter, gear ratios 3.65 / 1.60 / 1.40 / 1.10 with the 3.92 final drive, 650 kg with driver, rear springs softened with less bump travel because the real car bottoms out at the rear at Killarney. Model, sound, tyres and brakes are the original mod's.<br><br>Real car reference: Killarney 14 Oct 2026, best lap 1:58.3, top speed 146 km/h on a 140 limit, 80 to 130 km/h in about 9 s.",
  "specs":{"bhp":"64bhp/5500rpm","torque":"95Nm/4250rpm","weight":"650 kg","topspeed":"141km/h","acceleration":"13.6s 0-100km/h","pwratio":"10.2 kg/hp"},
  "tags":["rwd","street","lightweight","trackday","manual","South Africa","birkin","kent","rhd","4speed"],
  "powerCurve":[[float(r),round(hp(r,t),1)] for r,t in sorted(crank.items())],
@@ -66,12 +66,13 @@ def t80_130(curve,mass,ratios,shift_rpm):
     return t
 fd=3.916667
 print(f"stock Caterham 80-130: 3rd only {t80_130(stock,675,[1.258065*fd],9000):.1f}s, 4th only {t80_130(stock,675,[fd],9000):.1f}s")
-rat=[3.65*fd,1.60*fd,1.40*fd,fd]
-print(f"Birkin model 80-130: best shift {min((round(t80_130(new,710,rat,sh),1),sh) for sh in (5200,5500,5800,6200,6500))} (s, rpm)  shifting at 6200 {t80_130(new,710,rat,6500):.1f}s, 4th only {t80_130(new,710,[fd],9000):.1f}s   (real Garmin best 9.0s, typical 10-12s)")
+g4 = 1.10          # v8: a shorter 4th (was 1.00) so the revs do not die after the shift to 4th
+rat=[3.65*fd,1.60*fd,1.40*fd,g4*fd]
+print(f"Birkin model 80-130: best shift {min((round(t80_130(new,710,rat,sh),1),sh) for sh in (5200,5500,5800,6200,6500))} (s, rpm)  shifting at 6200 {t80_130(new,710,rat,6500):.1f}s, 4th only {t80_130(new,710,[g4*fd],9000):.1f}s   (real Garmin best 9.0s, typical 10-12s)")
 # top speed in 4th
 v=30
-while accel(new,710,fd,v,k)>0 and v<80: v+=0.1
-print(f"Birkin model top speed ~{v*3.6:.0f} km/h at {v/(2*math.pi*R)*60*fd:.0f} rpm; gear speeds at 6500: "+", ".join(f"{6500/60*2*math.pi*R/r*3.6:.0f}" for r in rat))
+while accel(new,710,g4*fd,v,k)>0 and v<80: v+=0.1
+print(f"Birkin model top speed ~{v*3.6:.0f} km/h at {v/(2*math.pi*R)*60*g4*fd:.0f} rpm; gear speeds at 6500: "+", ".join(f"{6500/60*2*math.pi*R/r*3.6:.0f}" for r in rat))
 # 0-100
 v=0.5; t=0; g=0
 while v<100/3.6 and t<30:

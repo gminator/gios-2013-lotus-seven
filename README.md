@@ -33,7 +33,7 @@ Manager.
 
 | Area | Change |
 |---|---|
-| Gearbox | 4-speed, 3.65 / 1.60 / 1.40 / 1.00, final 3.92, open diff (2nd lengthened after driving it on 18 Oct 2026 so it holds through the kink; 3rd went 1.37, then 1.30, then back to a shorter 1.40 because it still ran too long down the start straight: the real car wants 4th well before the line) |
+| Gearbox | 4-speed, 3.65 / 1.60 / 1.40 / 1.10, final 3.92, open diff (18 Oct 2026, after driving it: 2nd lengthened so it holds through the kink; 3rd went 1.37, 1.30, then a shorter 1.40 because it ran too long down the start straight; 4th shortened from 1.00 to 1.10 because the shift to 4th felt wrong, the revs fell away. His 2nd to 3rd felt realistic) |
 | Engine | 711M 1700 Kent, gas-flowed head, performance cam, low compression: about 64 bhp (48 kW) at 5,500 rpm, 95 Nm at 4,250, 6,800 limiter (v7: a peaky cammed Kent, weak below 3,500 rpm, fading fast past 5,500) |
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
