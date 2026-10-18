@@ -58,8 +58,7 @@ def main():
     sys.path.insert(0, os.path.join(HERE, 'tools'))
     import kn5_patch_tex  # noqa: runs on import with argv, so call its function instead
     kn5_patch_tex.patch(CAR + '.kn5', CAR + '.kn5', {'dashboard.dds': os.path.join(ov, 'kn5_textures', 'dashboard.dds'),
-                                                     'tex_misc.dds': os.path.join(ov, 'kn5_textures', 'tex_misc.dds'),          # Lotus 7 seat patch and badges instead of Caterham
-                                                     'body_base_map.dds': os.path.join(ov, 'kn5_textures', 'body_base_map.dds')})  # the mod's painted side port removed
+                                                     'tex_misc.dds': os.path.join(ov, 'kn5_textures', 'tex_misc.dds')})          # SQP harness pads, Lotus 7 wheel badges
     # wooden dash, black headlamp housings, polished screen frame, deck, exhaust, rack: new materials and meshes written into the model
     from kn5_mod import Kn5Mod
     import numpy as np, exhaust_geom
@@ -104,6 +103,9 @@ def main():
     k.add_texture('gio_rack.dds', os.path.join(ov, 'kn5_textures', 'gio_rack.dds'))
     k.add_material('gio_rack', 'ksPerPixel', dict(ksAmbient=0.5, ksDiffuse=0.55, ksSpecular=0.6, ksSpecularEXP=40, ksEmissive=0, ksAlphaRef=0), {'txDiffuse': 'gio_rack.dds'})
     k.replace_mesh('exhaust_attach', RV, RI, material='gio_rack')
+    # seats: LOTUS over 7 stitched on the seat backs (own texture patch per seat)
+    import seats
+    seats.apply(k, _b, _X, ov)
     k.save(CAR + '.kn5')
     os.chdir(out)
     zp = os.path.join(out, CAR + '.zip')
