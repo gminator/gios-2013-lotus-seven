@@ -96,7 +96,7 @@ def main():
     ex = [m for m in _X if m['name'] == 'exhaust'][0]
     V, I = exhaust_geom.build(); V = exhaust_geom.to_local(V, ex['world'])
     k.add_texture('gio_exhaust.dds', os.path.join(ov, 'kn5_textures', 'gio_exhaust.dds'))
-    k.add_material('gio_exhaust', 'ksPerPixel', dict(ksAmbient=0.45, ksDiffuse=0.55, ksSpecular=0.9, ksSpecularEXP=35, ksEmissive=0, ksAlphaRef=0), {'txDiffuse': 'gio_exhaust.dds'})
+    k.add_material('gio_exhaust', 'ksPerPixel', dict(ksAmbient=0.45, ksDiffuse=0.6, ksSpecular=0.45, ksSpecularEXP=28, ksEmissive=0, ksAlphaRef=0), {'txDiffuse': 'gio_exhaust.dds'})   # dull, not chrome
     k.replace_mesh('exhaust', V, I, material='gio_exhaust')
     # the mod's exhaust bracket node carries the wooden luggage rack instead
     import rack_geom

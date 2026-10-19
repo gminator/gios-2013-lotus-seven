@@ -38,7 +38,7 @@ Manager.
 | Mass | 650 kg with driver |
 | Rear suspension | Softer springs, less travel before the bump stops (the real car bottoms out) |
 | Skin | `00_british_racing_green`: BRG with an aluminium bonnet, yellow grille lip, black 7 grille, silver rims, two side vents on the exhaust side, Union Jack and G. ADONIS on the sides, G-SEVEN plates |
-| Exhaust | Remodelled to his: wrapped elbow out of the side panel, long silencer in an expanded-metal guard with three bands, bare tailpipe bending down ahead of the rear wheel (`tools/exhaust_geom.py`, written into the kn5 by the build) |
+| Exhaust | Remodelled to his: wrapped elbow out of the side panel, long silencer in a black expanded-metal guard with three bands and closed end rings, bare dull-stainless tailpipe out of the guard end that bends down ahead of the rear wheel with its mouth just below the guard (`tools/exhaust_geom.py`, texture from `tools/exhaust_texture.py`, written into the kn5 by the build). v12 fixed the open guard end that read as a hole, the too-thin tailpipe that swept sideways, and the silver mesh and white pipe |
 | Seats and badges | The Caterham seat patch, belt label and Super 7 roundel in the mod's `tex_misc.dds` replaced with LOTUS 7 items in orange stitching |
 | Dash and trim | White-faced VDO dials, speedo in km/h (the mod's was MPH), patched into the kn5; wooden dash, flat body-colour rear deck (the canvas tonneau and its press studs removed) with a wooden luggage rack on chrome rails (`tools/rack_geom.py`), polished screen frame and black headlight housings, all as materials and meshes written into the kn5 |
 
