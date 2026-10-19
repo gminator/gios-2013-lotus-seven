@@ -98,3 +98,5 @@ Model, textures, sound: Ben O'Bro. Physics research: JackCY (Jaroslav Černý). 
 RaceDepartment. The re-tune, livery and dash are Giovann Adonis's, for his own car.
 
 `tools/blender_sprites.py` renders the built car (exported with `tools/kn5_to_obj_full.py`) from a fixed three-quarter top camera at 72 headings on a transparent background, for dashboards and maps: `blender --background --python tools/blender_sprites.py -- car.obj out_dir 72 256 58`.
+
+Only the `00_british_racing_green` skin is in the game on the gaming PC. The stock mod's other 10 skins were moved out on 19 Oct 2026 to `C:\Users\giova\ac_backup\bo_birkin_s3_1700_kent_skins` (move a folder back into the car's `skins` folder to restore it).
