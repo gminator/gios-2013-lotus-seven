@@ -77,7 +77,7 @@ def _disc_z(c, r_in, r_out, row, nz=-1.0, segs=40):
     return np.array(V, np.float32), np.array(I, np.int64)
 
 
-def build(Y=0.118, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_hole=0.23, z_hole=0.80, x_panel=0.37):
+def build(Y=0.165, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_hole=0.23, z_hole=0.80, x_panel=0.37):
     # y_hole/z_hole/x_panel: the mod's own 14 x 13 cm cut-out in the left lower panel (the Caterham manifold hole); the elbow goes through it
     """Silencer axis follows the tapering body side (x_front at z_front, x_rear at z_rear). The elbow leaves the flat side
     panel at (x_panel, y_hole, z_hole), comes out into the open and curves down into the top of the silencer's front end."""
@@ -101,11 +101,11 @@ def build(Y=0.118, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_
     # the guard is open-ended, so close both ends with a black ring (the game culls its inner faces, which read as a hole)
     parts.append(_disc_z((axis(z_rear + 0.02), Y, z_rear + 0.02), 0.027, 0.056, 3, nz=-1.0))
     parts.append(_disc_z((axis(z_front - 0.02), Y, z_front - 0.02), 0.027, 0.056, 3, nz=1.0))
-    # tailpipe, as on his car: out of the guard end, straight back about 9 cm, then a tight bend down ahead of the rear wheel,
-    # leaning out a little, the mouth hanging just below the guard and pointing at the ground. Bare stainless, so its own texture row.
+    # tailpipe, as on his car: out of the guard end, straight back about 9 cm, then a tight bend outward ahead of the rear wheel,
+    # drooping a little, the mouth pointing out to the side. Bare stainless, so its own texture row.
     xr = axis(z_rear)
-    parts.append(_tube([(xr, Y, z_rear + 0.015), (xr, Y, z_rear - 0.09), (xr + 0.012, Y - 0.012, z_rear - 0.135),
-                        (xr + 0.03, Y - 0.04, z_rear - 0.162), (xr + 0.04, Y - 0.07, z_rear - 0.17), (xr + 0.046, Y - 0.095, z_rear - 0.172)],
+    parts.append(_tube([(xr, Y, z_rear + 0.015), (xr, Y, z_rear - 0.09), (xr + 0.012, Y - 0.004, z_rear - 0.135),
+                        (xr + 0.045, Y - 0.013, z_rear - 0.165), (xr + 0.085, Y - 0.022, z_rear - 0.176), (xr + 0.125, Y - 0.028, z_rear - 0.18)],
                        0.026, 4, segs=24, cap_rows=(None, 3)))          # 52 mm tailpipe
     V = np.concatenate([p[0] for p in parts]); I = []; off = 0
     for v, i in parts: I += list(i + off); off += len(v)
