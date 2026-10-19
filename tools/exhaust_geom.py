@@ -86,8 +86,9 @@ def build(Y=0.165, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_
         t = (z - z_front) / (z_rear - z_front); return x_front + (x_rear - x_front) * t
     xe = axis(z_front) + 0.0
     # elbow: from inside the bay, through the panel, out and down into the silencer front
-    parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.07, y_hole - 0.01, z_hole - 0.005),
-                        (xe - 0.01, y_hole - 0.05, z_hole - 0.04), (xe, Y + 0.05, z_hole - 0.09), (xe, Y, z_hole - 0.125), (xe, Y, z_hole - 0.17)], 0.031, 1))   # last leg runs 4 cm into the silencer so the join is buried
+    parts.append(_tube([(x_panel - 0.14, y_hole, z_hole), (x_panel + 0.02, y_hole, z_hole), (x_panel + 0.075, y_hole - 0.004, z_hole - 0.008),
+                        (xe - 0.012, y_hole - 0.022, z_hole - 0.038), (xe - 0.003, y_hole - 0.045, z_hole - 0.075), (xe, Y + 0.012, z_hole - 0.112),
+                        (xe, Y, z_hole - 0.145), (xe, Y, z_hole - 0.17)], 0.031, 1))      # one smooth curve: out, then over and down into the silencer front   # last leg runs 4 cm into the silencer so the join is buried
     # rubber grommet flush with the panel
     # rubber edge trim round the cut-out: a slim black ring just proud of the panel, and a dark back plate 4 cm inside so the opening has depth
     parts.append(_annulus((x_panel + 0.006, y_hole, z_hole), 0.080, 0.097, 3, nx=1.0, depth=0.008))
@@ -105,7 +106,7 @@ def build(Y=0.165, z_front=0.665, z_rear=-0.405, x_front=0.491, x_rear=0.581, y_
     # drooping a little, the mouth pointing out to the side. Bare stainless, so its own texture row.
     xr = axis(z_rear)
     parts.append(_tube([(xr, Y, z_rear + 0.015), (xr, Y, z_rear - 0.09), (xr + 0.012, Y - 0.004, z_rear - 0.135),
-                        (xr + 0.045, Y - 0.013, z_rear - 0.165), (xr + 0.085, Y - 0.022, z_rear - 0.176), (xr + 0.125, Y - 0.028, z_rear - 0.18)],
+                        (xr + 0.028, Y - 0.009, z_rear - 0.153), (xr + 0.052, Y - 0.015, z_rear - 0.168), (xr + 0.085, Y - 0.022, z_rear - 0.177), (xr + 0.125, Y - 0.028, z_rear - 0.18)],
                        0.026, 4, segs=24, cap_rows=(None, 3)))          # 52 mm tailpipe
     V = np.concatenate([p[0] for p in parts]); I = []; off = 0
     for v, i in parts: I += list(i + off); off += len(v)
