@@ -72,7 +72,7 @@ def paint(mask_png, out_dds, check_png=None, base_map_png=None):
     # flags under the scuttle, name low behind the flags (moved back 19 Oct 2026 so it clears them), exhaust hole where the elbow pierces the left panel
     # bottom strip (left side of the car): upright, tilted to follow the panel
     # bottom strip = right side of the car (the game reads v from the bottom); no exhaust there
-    place(out, vent, 723, 670, TILT); place(out, flags, 478, 735, TILT); place(out, name, 335, 772, TILT)
+    place(out, vent, 723, 670, TILT); place(out, flags, 478, 735, TILT); place(out, name, 392, 768, TILT)     # the right-side island sits further back: this keeps the G off the arch panel
     # top strip = left side, laid out rotated 180 degrees: exhaust hole where the elbow pierces the panel
     place(out, vent, 723, 1024 - 670, 180 - TILT); place(out, flags, 478, 1024 - 735, 180 - TILT); place(out, name, 335, 1024 - 772, 180 - TILT)
 
