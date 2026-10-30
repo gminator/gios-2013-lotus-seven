@@ -64,6 +64,8 @@ shocked to see 60 kW from it, so the peak stays at about 51 kW. Drag already mat
 
 **Gears (30 Oct 2026):** 3rd at 1.55 was too short once 4th went back to 1.10 (a 29 percent rev drop into 4th). Now 2.55 / 1.65 / 1.45 / 1.10: 2nd to 3rd keeps the carry-on ratio he called spot on (1.14), 3rd to 4th drops about 24 percent, 1st to 2nd about 35 percent. At 6,500 rpm 1st is about 72 km/h, 2nd 111, 3rd 125, 4th 165.
 
+**3rd a touch longer (30 Oct 2026):** 3rd 1.45 to 1.42 (he asked for about half a second longer in 3rd): it now tops out near 128 km/h at 6,500 rpm, about 2.6 km/h further, roughly half a second at that pull. Gears 2.55 / 1.65 / 1.42 / 1.10.
+
 **v11 (30 Oct 2026, after driving it):** he has to slip the clutch for ages and take Killarney turn 1 in 2nd because 3rd feels lazy, and in the real car turn 1 is easily 3rd. So the torque below the cam went up about 25 percent (about 53 to 68 in `power.lut` from 2,000 to 4,000 rpm, 45 to 52 at 1,000 rpm), a gentle rise into the 5,000 rpm peak, which is unchanged (so the peak power stays at about 51 kW). `throttle.lut` also opens a little early at part throttle (+10 percent at 10 to 30 percent pedal, nothing at full throttle). His telemetry showed the response lag was already short (90 percent of the push within 0.3 s of a throttle step); it is the low-rpm torque that felt lazy.
 
 Earlier versions: v2 (114 bhp) drove far too strong (169 km/h on the back straight, laps of 1:46 against 131 to 146 km/h and 1:58.6 at
