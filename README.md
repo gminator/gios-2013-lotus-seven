@@ -54,6 +54,8 @@ from 3,000 rpm, the wrong shape (a 6,000 rpm shift into 4th landed near 4,350, b
 sluggish at the top: in 3 laps it never reached 140 km/h, while 10 of his 16 real Killarney laps did (best 146). v10 keeps the weak low end and
 restores v7's power from 5,000 rpm up, so 140 is reachable again. 4th is 1.10, so a shift at 6,500 rpm lands near 5,100. He said he would be
 shocked to see 60 kW from it, so the peak stays at about 51 kW. Drag already matched a Seven (about 0.87 m2, 0.22 g on a lift at speed).
+**v11 (30 Oct 2026, after driving it):** he has to slip the clutch for ages and take Killarney turn 1 in 2nd because 3rd feels lazy, and in the real car turn 1 is easily 3rd. So the torque below the cam went up about 25 percent (about 53 to 68 in `power.lut` from 2,000 to 4,000 rpm, 45 to 52 at 1,000 rpm), a gentle rise into the 5,000 rpm peak, which is unchanged (so the peak power stays at about 51 kW). `throttle.lut` also opens a little early at part throttle (+10 percent at 10 to 30 percent pedal, nothing at full throttle). His telemetry showed the response lag was already short (90 percent of the push within 0.3 s of a throttle step); it is the low-rpm torque that felt lazy.
+
 Earlier versions: v2 (114 bhp) drove far too strong (169 km/h on the back straight, laps of 1:46 against 131 to 146 km/h and 1:58.6 at
 Killarney), v3 to v7 trimmed it down from 91 to 64 bhp. The Garmin trace implies more pull at 100 to 130 km/h than v10 gives; his feel of the
 real car outranks the trace. The dashed lines are v9 and v7. The real car gets dyno'd over the coming months; each run goes into `dyno/` and
